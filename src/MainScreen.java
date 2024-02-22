@@ -3,48 +3,28 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainScreen extends JFrame{
-    private JButton btnFeeder;
-    private JButton btnDoor;
-    private JButton btnSettngs;
+    private JButton btnSettings;
     private JButton btnProfile;
-    private JLabel lblTitle;
-    private JPanel panel;
+    private JPanel mainPanel;
+    private FeedingPanel panel2;
+    private static int SCREEN_WIDTH = 420;
+    private static int SCREEN_HEIGHT = 800;
 
-
-    public MainScreen(String title){
+    public MainScreen(){
         //generate Jframe
-        super(title);
+        super("RoostRemote");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        panel = new JPanel();
-
-        lblTitle = new JLabel("RoosterRemote");
-        lblTitle.setBounds(110, 50, 200, 30);
-
-        btnFeeder = new JButton("Feeder");
-        btnFeeder.setBounds(110, 200, 200, 100);
-
-        btnDoor = new JButton("Door");
-        btnDoor.setBounds(110, 400, 200, 100);
-
-
-        //configure the actionlistener for the button
-        btnFeeder.addActionListener((ActionEvent actionEvent) -> {
-                
-        });
-        btnDoor.addActionListener((ActionEvent actionEvent) -> {
-                
-        });
-        panel.add(lblTitle);
-        panel.add(btnFeeder);
-        panel.add(btnDoor);
+        mainPanel = new MainPanel();
+        mainPanel.setBounds(0, 0, SCREEN_WIDTH-15, SCREEN_HEIGHT-38);
 
         //add the Jpanel to the Jframe
-        setContentPane(panel);
-        setSize(420, 900);
+        add(mainPanel);
+        setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(null);
-
+        setResizable(false);
+        setVisible(true);
     }
 }

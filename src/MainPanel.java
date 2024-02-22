@@ -25,8 +25,8 @@ public class MainPanel extends JPanel {
         btnDoor.setBounds(110, 400, 200, 100);
 
         //configure the actionlistener for the button
-        // btnFeeder.addActionListener((ActionEvent actionEvent) -> {});
-        // btnDoor.addActionListener((ActionEvent actionEvent) -> {});
+        // btnFeeder.addActionListener(e -> {});
+        // btnDoor.addActionListener(e -> {});
 
         add(lblTitle);
         add(btnFeeder);

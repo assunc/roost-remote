@@ -15,7 +15,7 @@ public class MainScreen extends JFrame{
         super("RoostRemote");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        mainPanel = new MainPanel();
+        mainPanel = new MainPanel(this);
         mainPanel.setBounds(0, 0, SCREEN_WIDTH-15, SCREEN_HEIGHT-38);
 
         //add the Jpanel to the Jframe

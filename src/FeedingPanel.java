@@ -1,3 +1,6 @@
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -10,18 +13,16 @@ public class FeedingPanel extends JPanel {
 
     public FeedingPanel(String time, int weight) {
         super();
+        setLayout(new FlowLayout());
+        setSize(new Dimension(300, 100));
         
         lblTime = new JLabel(time);
-        lblTime.setBounds(20, 50, 100, 50);
 
         lblWeight = new JLabel(String.valueOf(weight) + "g");
-        lblWeight.setBounds(150, 50, 100, 50);
 
         btnEdit = new JButton("Edit");
-        btnEdit.setBounds(250, 50, 50, 50);
 
         btnRemove = new JButton("Remove");
-        btnRemove.setBounds(250, 100, 50, 50);
 
 
         add(lblTime);

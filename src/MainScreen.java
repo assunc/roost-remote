@@ -1,30 +1,57 @@
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.*;
 
 public class MainScreen extends JFrame{
     private JButton btnSettings;
     private JButton btnProfile;
+    private JPanel headerPanel;
     private JPanel mainPanel;
-    private FeedingPanel panel2;
+    private JPanel feederPanel;
+    private JPanel doorPanel;
+    private JPanel mainScreen;
     private static int SCREEN_WIDTH = 420;
     private static int SCREEN_HEIGHT = 800;
+    private CardLayout card;
 
     public MainScreen(){
         //generate Jframe
         super("RoostRemote");
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setLayout(new BorderLayout());
+        // setResizable(false);
+
+        headerPanel = new JPanel();
+        headerPanel.setPreferredSize(new Dimension(100, 50));
+        headerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+
+        mainScreen = new JPanel();
+        mainScreen.setPreferredSize(new Dimension(100, 100));
+        card = new CardLayout();
+        mainScreen.setLayout(card);
 
         mainPanel = new MainPanel(this);
-        mainPanel.setBounds(0, 0, SCREEN_WIDTH-15, SCREEN_HEIGHT-38);
+        mainPanel.setPreferredSize(new Dimension(100, 100));
 
-        //add the Jpanel to the Jframe
-        add(mainPanel);
-        setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(null);
-        setResizable(false);
+        feederPanel = new FeederPanel(this);
+        feederPanel.setPreferredSize(new Dimension(100, 100));
+
+        doorPanel = new DoorPanel(this);
+        doorPanel.setPreferredSize(new Dimension(100, 100));
+
+        mainScreen.add(feederPanel, "feeder");
+        mainScreen.add(doorPanel, "door");
+        mainScreen.add(mainPanel, "main");
+        card.show(mainScreen, "main");
+
+        //add the Jpanels to the Jframe
+        add(headerPanel, BorderLayout.NORTH);
+        add(mainScreen, BorderLayout.CENTER);
         setVisible(true);
+    }
+
+    public void openScreen(String screen) {
+        card.show(mainScreen, screen);
     }
 }

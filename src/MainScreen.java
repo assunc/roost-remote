@@ -20,7 +20,7 @@ public class MainScreen extends JFrame{
         setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		setLayout(new BorderLayout());
-        // setResizable(false);
+        setResizable(false);
 
         headerPanel = new JPanel();
         headerPanel.setPreferredSize(new Dimension(100, 50));

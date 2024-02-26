@@ -1,9 +1,5 @@
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import java.awt.*;
+import javax.swing.*;
 
 public class FeedingPanel extends JPanel {
     private JButton btnEdit;
@@ -11,18 +7,21 @@ public class FeedingPanel extends JPanel {
     private JLabel lblTime;
     private JLabel lblWeight;
 
-    public FeedingPanel(String time, int weight) {
+    public FeedingPanel(String time, int weight, FeederPanel panel) {
         super();
         setLayout(new FlowLayout());
         setSize(new Dimension(300, 100));
+        setAlignmentX(Component.CENTER_ALIGNMENT);
         
         lblTime = new JLabel(time);
 
         lblWeight = new JLabel(String.valueOf(weight) + "g");
 
         btnEdit = new JButton("Edit");
+        btnEdit.addActionListener(e -> panel.editFeedingTime(this));
 
         btnRemove = new JButton("Remove");
+        btnRemove.addActionListener(e -> panel.removeFeedingTime(this));
 
         add(lblTime);
         add(lblWeight);
@@ -33,5 +32,9 @@ public class FeedingPanel extends JPanel {
     public int getTimeCompare() {
         String[] times = lblTime.getText().split("\\:");
         return 2*Integer.parseInt(times[0]) + (times[1].equals("30")?1:0);
+    }
+
+    public void setWeight(int newWeight) {
+        lblWeight.setText(String.valueOf(newWeight) + "g");
     }
 }

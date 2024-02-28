@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 public class Login extends JFrame{
@@ -8,7 +9,7 @@ public class Login extends JFrame{
         private JLabel lblUsername, lblPassword;
         private JTextField txtUsername;
         private JPasswordField txtPassword;
-        private JButton btnLogin, btnCancel;
+        private JButton btnLogin, btnCreate;
 
         public Login() {
             super("Login");
@@ -45,17 +46,17 @@ public class Login extends JFrame{
             panel.add(txtPassword, c);
 
             // Login button
-            btnLogin = new JButton("Login");
+            btnLogin = new JButton("Log in");
             btnLogin.addActionListener(e -> {
-                // Replace the following with your actual login logic
-                if (txtUsername.getText().equals("admin") && txtPassword.getPassword().toString().equals("password")) {
-                    JOptionPane.showMessageDialog(this, "Login successful!");
-                    // Close the login window and open the main application window
+                String a = txtUsername.getText();
+                String p = txtPassword.getPassword().toString();
+                if (txtUsername.getText().equals("admin") && txtPassword.getText().equals("password")) {
+                    JOptionPane.showMessageDialog(Login.this, "Login successful!");
+                    MainScreen mainScreen = new MainScreen();
+                    mainScreen.setVisible(true);
                     setVisible(false);
-                    // Replace with your main application window
-                    // new MyMainApplicationWindow().setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(this, "Invalid username or password!");
+                    JOptionPane.showMessageDialog(Login.this, "Invalid username or password!");
                 }
             });
             c.gridy = 2;
@@ -63,10 +64,20 @@ public class Login extends JFrame{
             panel.add(btnLogin, c);
 
             // Cancel button
-            btnCancel = new JButton("Cancel");
-            btnCancel.addActionListener(e -> System.exit(0));
+            btnCreate = new JButton("Create a new account");
+            //btnCancel.addActionListener(e -> System.exit(0));
+            //btnCreate.addActionListener(e -> frame.openScreen("main"));
+            btnCreate.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Create an instance of the CreateAccountPanel
+                    createAccount createAccountPanel = new createAccount(Login.this);
+                    createAccountPanel.setVisible(true);
+                    setVisible(false);
+                }
+            });
             c.gridx = 1;
-            panel.add(btnCancel, c);
+            panel.add(btnCreate, c);
 
             add(panel);
             setVisible(true);

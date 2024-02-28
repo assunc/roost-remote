@@ -15,7 +15,7 @@ public class FeedingPanel extends JPanel {
         
         lblTime = new JLabel(time);
 
-        lblWeight = new JLabel(String.valueOf(weight) + "g");
+        lblWeight = new JLabel(weight + "g");
 
         btnEdit = new JButton("Edit");
         btnEdit.addActionListener(e -> panel.editFeedingTime(this));
@@ -30,11 +30,11 @@ public class FeedingPanel extends JPanel {
     }
 
     public int getTimeCompare() {
-        String[] times = lblTime.getText().split("\\:");
+        String[] times = lblTime.getText().split(":");
         return 2*Integer.parseInt(times[0]) + (times[1].equals("30")?1:0);
     }
 
     public void setWeight(int newWeight) {
-        lblWeight.setText(String.valueOf(newWeight) + "g");
+        lblWeight.setText(newWeight + "g");
     }
 }

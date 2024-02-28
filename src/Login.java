@@ -49,13 +49,13 @@ public class Login extends JFrame{
             btnLogin.addActionListener(e -> {
                 // Replace the following with your actual login logic
                 if (txtUsername.getText().equals("admin") && txtPassword.getPassword().toString().equals("password")) {
-                    JOptionPane.showMessageDialog(Login.this, "Login successful!");
+                    JOptionPane.showMessageDialog(this, "Login successful!");
                     // Close the login window and open the main application window
                     setVisible(false);
                     // Replace with your main application window
                     // new MyMainApplicationWindow().setVisible(true);
                 } else {
-                    JOptionPane.showMessageDialog(Login.this, "Invalid username or password!");
+                    JOptionPane.showMessageDialog(this, "Invalid username or password!");
                 }
             });
             c.gridy = 2;

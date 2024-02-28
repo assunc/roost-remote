@@ -5,8 +5,8 @@ import java.awt.event.*;
 public class DoorPanel extends JPanel {
 
     private JButton btnBack;
-    private JTextField txtOpeningTime;
-    private JTextField txtClosingTime;
+    private TimePicker timeOpen;
+    private TimePicker timeClose;
     private JButton btnChangeOpeningTime;
     private JButton btnChangeClosingTime;
     private JButton btnToggleDoor;
@@ -18,35 +18,42 @@ public class DoorPanel extends JPanel {
         // Panel for Opening Time
         JPanel openingTimePanel = new JPanel();
         openingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JLabel lblOpeningTime = new JLabel("Opening Time:");
-        openingTimePanel.add(lblOpeningTime);
-        txtOpeningTime = new JTextField("06:00", 5);
-        openingTimePanel.add(txtOpeningTime);
+
+        timeOpen = new TimePicker();
+        timeOpen.setSize(200, 50);
+
         btnChangeOpeningTime = new JButton("Save Changes");
+
+        openingTimePanel.add(lblOpeningTime);
+        openingTimePanel.add(timeOpen);
         openingTimePanel.add(btnChangeOpeningTime);
 
         // Panel for Closing Time
         JPanel closingTimePanel = new JPanel();
         closingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JLabel lblClosingTime = new JLabel("Closing Time:");
-        closingTimePanel.add(lblClosingTime);
-        txtClosingTime = new JTextField("18:00", 5);
-        closingTimePanel.add(txtClosingTime);
+
+        timeClose = new TimePicker();
+        timeClose.setSize(200, 50);
+
         btnChangeClosingTime = new JButton("Save Changes");
+
+        closingTimePanel.add(lblClosingTime);
+        closingTimePanel.add(timeClose);
         closingTimePanel.add(btnChangeClosingTime);
 
         // Toggle button for manual control
         btnToggleDoor = new JButton("Open Door");
-        btnToggleDoor.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (btnToggleDoor.getText().equals("Open Door")) {
-                    btnToggleDoor.setText("Close Door");
-                    // Replace with your door closing logic here
-                } else {
-                    btnToggleDoor.setText("Open Door");
-                    // Replace with your door opening logic here
-                }
+        btnToggleDoor.addActionListener(e -> {
+            if (btnToggleDoor.getText().equals("Open Door")) {
+                btnToggleDoor.setText("Close Door");
+                // Replace with your door closing logic here
+            } else {
+                btnToggleDoor.setText("Open Door");
+                // Replace with your door opening logic here
             }
         });
         btnToggleDoor.setAlignmentX(Component.CENTER_ALIGNMENT);

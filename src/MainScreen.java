@@ -9,8 +9,8 @@ public class MainScreen extends JFrame{
     private JPanel feederPanel;
     private JPanel doorPanel;
     private JPanel mainScreen;
-    private static int SCREEN_WIDTH = 420;
-    private static int SCREEN_HEIGHT = 800;
+    private static int SCREEN_WIDTH = 380;
+    private static int SCREEN_HEIGHT = 680;
     private CardLayout card;
 
     public MainScreen(){

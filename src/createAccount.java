@@ -6,10 +6,17 @@ public class createAccount extends JFrame {
 
     private JLabel lblUsername, lblPassword, lblConfirmPassword;
     private JTextField txtUsername;
-    private JPasswordField txtPassword, txtConfirmPassword;
+    private JTextField txtPassword, txtConfirmPassword;
     private JButton btnCreateAccount, btnBackToLogIn;
     private Login loginScreen;
 
+    public String getUsername()
+    {
+        return txtUsername.getText();
+    }
+    public String getPassword(){
+        return txtPassword.getText();
+    }
     public createAccount(Login logIn) {
         super("Create Account");
         this.loginScreen = logIn;
@@ -63,10 +70,17 @@ public class createAccount extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //String username = txtUsername.getText();
-                String password = new String(txtPassword.getPassword());
-                String confirmPassword = new String(txtConfirmPassword.getPassword());
+                String password = new String(txtPassword.getText());
+                String confirmPassword = new String(txtConfirmPassword.getText());
                 if (password.length() > 4) {
                     if (password.equals(confirmPassword)) {
+
+                        String username = txtUsername.getText();
+                        String pswrd = Integer.toString(txtPassword.getText().hashCode());
+
+                        DBTest db = new DBTest();
+                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateUser/" + username + "/" + pswrd);
+
                         JOptionPane.showMessageDialog(createAccount.this, "Account successfully created!");
                         setVisible(false);
                         loginScreen.setVisible(true); // Show the login screen again

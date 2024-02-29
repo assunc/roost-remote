@@ -2,8 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainPanel extends JPanel {
-    private JButton btnFeeder;
-    private JButton btnDoor;
+    private JButton btnFeeder, btnDoor;
     private JLabel lblTitle;
     
     public MainPanel(MainScreen frame) {

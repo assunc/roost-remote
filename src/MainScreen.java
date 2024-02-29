@@ -2,13 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class MainScreen extends JFrame{
-    private JButton btnSettings;
-    private JButton btnProfile;
-    private JPanel headerPanel;
-    private JPanel mainPanel;
-    private JPanel feederPanel;
-    private JPanel doorPanel;
-    private JPanel mainScreen;
+    private JButton btnSettings, btnProfile;
+    private JPanel headerPanel, mainPanel, feederPanel, doorPanel, mainScreen;
     private static int SCREEN_WIDTH = 380;
     private static int SCREEN_HEIGHT = 680;
     private CardLayout card;

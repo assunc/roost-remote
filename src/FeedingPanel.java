@@ -2,10 +2,8 @@ import java.awt.*;
 import javax.swing.*;
 
 public class FeedingPanel extends JPanel {
-    private JButton btnEdit;
-    private JButton btnRemove;
-    private JLabel lblTime;
-    private JLabel lblWeight;
+    private JButton btnEdit, btnRemove;
+    private JLabel lblTime, lblWeight;
     int weight;
 
     public FeedingPanel(String time, int weight, FeederPanel panel) {

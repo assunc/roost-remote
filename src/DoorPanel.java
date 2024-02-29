@@ -5,11 +5,8 @@ import java.awt.event.*;
 public class DoorPanel extends JPanel {
 
     private JButton btnBack;
-    private TimePicker timeOpen;
-    private TimePicker timeClose;
-    private JButton btnChangeOpeningTime;
-    private JButton btnChangeClosingTime;
-    private JButton btnToggleDoor;
+    private TimePicker timeOpen, timeClose;
+    private JButton btnChangeOpeningTime, btnChangeClosingTime, btnToggleDoor;
 
     public DoorPanel(MainScreen frame) {
         super();

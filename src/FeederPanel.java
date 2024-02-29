@@ -3,18 +3,11 @@ import java.awt.*;
 import org.json.*;
 
 public class FeederPanel extends JPanel {
-    private JButton btnBack;
-    private JButton btnAdd;
-    private JPanel mainPanel;
-    private JPanel buttonsPanel;
-    private JPanel addPanel;
-    private JPanel editPanel;
-    private JLabel lblTime;
+    private JButton btnBack, btnAdd, btnClear;
+    private JPanel mainPanel, buttonsPanel, addPanel, editPanel;
     private TimePicker timePicker;
-    private JLabel lblWeightAdd;
-    private JTextField txtWeightAdd;
-    private JLabel lblWeightEdit;
-    private JTextField txtWeightEdit;
+    private JLabel lblTime, lblWeightAdd, lblWeightEdit;
+    private JTextField txtWeightAdd, txtWeightEdit;
     private MainScreen frame;
 
     public FeederPanel(MainScreen parentFrame) {
@@ -28,17 +21,7 @@ public class FeederPanel extends JPanel {
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         mainPanel.setPreferredSize(new Dimension(100, 100));
 
-        new JSONArray(DB.makeGETRequest("getFeedingTimes/1/")).forEach(time -> {
-            FeedingPanel temp = new FeedingPanel(((JSONObject) time).getString("time"), ((JSONObject) time).getInt("weight"), this);
-            int index = -1;
-            for (int i = 0; i < mainPanel.getComponentCount(); i++) {
-                if (temp.getTimeCompare() < ((FeedingPanel) mainPanel.getComponent(i)).getTimeCompare()) {
-                    index = i;
-                    break;
-                }
-            }
-            mainPanel.add(temp, index);
-        });
+        new JSONArray(DB.makeGETRequest("getFeedingTimes/1/")).forEach(time -> addFeedingTime(((JSONObject) time).getString("time"), ((JSONObject) time).getInt("weight")));
         revalidate();
 
         // addPanel
@@ -90,20 +73,10 @@ public class FeederPanel extends JPanel {
 
         btnAdd = new JButton("Add");
         btnAdd.addActionListener(e -> {
-            int result = JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (result == JOptionPane.OK_OPTION) {
+            if (JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
                 if (txtWeightAdd.getText().matches("^\\d+$")) {
                     DB.makeGETRequest("addFeedingTime/1/"+timePicker.getSelectedItem()+"/"+txtWeightAdd.getText());
-                    FeedingPanel temp = new FeedingPanel((String) timePicker.getSelectedItem(), Integer.parseInt(txtWeightAdd.getText()), this);
-                    int index = -1;
-                    for (int i = 0; i < mainPanel.getComponentCount(); i++) {
-                        if (temp.getTimeCompare() < ((FeedingPanel)mainPanel.getComponent(i)).getTimeCompare()) {
-                            index = i;
-                            break;
-                        }
-                    } 
-                    mainPanel.add(temp, index);
-                    revalidate();
+                    addFeedingTime((String) timePicker.getSelectedItem(), Integer.parseInt(txtWeightAdd.getText()));
                 } else {
                     JOptionPane.showMessageDialog(frame, "Weight has to be a positive whole number", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -112,11 +85,32 @@ public class FeederPanel extends JPanel {
             txtWeightAdd.setText("");
         });
 
+        btnClear = new JButton("Clear");
+        btnClear.addActionListener(e -> {
+            for (int i = 0; i < mainPanel.getComponentCount();) {
+                removeFeedingTime((FeedingPanel) mainPanel.getComponent(0));
+            }
+        });
+
         buttonsPanel.add(btnBack);
         buttonsPanel.add(btnAdd);
- 
+        buttonsPanel.add(btnClear);
+
         add(buttonsPanel, BorderLayout.SOUTH);
         add(mainPanel, BorderLayout.CENTER);
+    }
+
+    public void addFeedingTime(String time, int weight) {
+        FeedingPanel panel = new FeedingPanel(time, weight, this);
+        int index = -1;
+        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
+            if (panel.getTimeCompare() < ((FeedingPanel)mainPanel.getComponent(i)).getTimeCompare()) {
+                index = i;
+                break;
+            }
+        }
+        mainPanel.add(panel, index);
+        revalidate();
     }
 
     public void removeFeedingTime(FeedingPanel feedingTime) {

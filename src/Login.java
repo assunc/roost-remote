@@ -2,13 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 
 public class Login extends JFrame{
 
         private JLabel lblUsername, lblPassword;
         private JTextField txtUsername;
-        private JPasswordField txtPassword;
+        private JTextField txtPassword;
         private JButton btnLogin, btnCreate;
 
         public Login() {
@@ -48,9 +49,14 @@ public class Login extends JFrame{
             // Login button
             btnLogin = new JButton("Log in");
             btnLogin.addActionListener(e -> {
-                String a = txtUsername.getText();
-                String p = txtPassword.getPassword().toString();
-                if (txtUsername.getText().equals("admin") && txtPassword.getText().equals("password")) {
+                String u = txtUsername.getText();
+                String p = Integer.toString(txtPassword.getText().hashCode());
+
+
+                DBTest db = new DBTest();
+
+
+                if (p.equals(db.parseJSONLogin(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/Login/" + u)))) {
                     JOptionPane.showMessageDialog(Login.this, "Login successful!");
                     MainScreen mainScreen = new MainScreen();
                     mainScreen.setVisible(true);

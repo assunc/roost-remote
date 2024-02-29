@@ -6,9 +6,11 @@ public class FeedingPanel extends JPanel {
     private JButton btnRemove;
     private JLabel lblTime;
     private JLabel lblWeight;
+    int weight;
 
     public FeedingPanel(String time, int weight, FeederPanel panel) {
         super();
+        this.weight = weight;
         setLayout(new FlowLayout());
         setSize(new Dimension(300, 100));
         setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -37,4 +39,11 @@ public class FeedingPanel extends JPanel {
     public void setWeight(int newWeight) {
         lblWeight.setText(newWeight + "g");
     }
+    public String getWeight() {
+        return String.valueOf(weight);
+    }
+    public String getTime() {
+        return lblTime.getText();
+    }
+
 }

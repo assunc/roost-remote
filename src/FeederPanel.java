@@ -28,6 +28,19 @@ public class FeederPanel extends JPanel {
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         mainPanel.setPreferredSize(new Dimension(100, 100));
 
+        new JSONArray(DB.makeGETRequest("getFeedingTimes/1/")).forEach(time -> {
+            FeedingPanel temp = new FeedingPanel(((JSONObject) time).getString("time"), ((JSONObject) time).getInt("weight"), this);
+            int index = -1;
+            for (int i = 0; i < mainPanel.getComponentCount(); i++) {
+                if (temp.getTimeCompare() < ((FeedingPanel) mainPanel.getComponent(i)).getTimeCompare()) {
+                    index = i;
+                    break;
+                }
+            }
+            mainPanel.add(temp, index);
+        });
+        revalidate();
+
         // addPanel
 
         addPanel = new JPanel();
@@ -80,6 +93,7 @@ public class FeederPanel extends JPanel {
             int result = JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
             if (result == JOptionPane.OK_OPTION) {
                 if (txtWeightAdd.getText().matches("^\\d+$")) {
+                    DB.makeGETRequest("addFeedingTime/1/"+timePicker.getSelectedItem()+"/"+txtWeightAdd.getText());
                     FeedingPanel temp = new FeedingPanel((String) timePicker.getSelectedItem(), Integer.parseInt(txtWeightAdd.getText()), this);
                     int index = -1;
                     for (int i = 0; i < mainPanel.getComponentCount(); i++) {
@@ -106,6 +120,7 @@ public class FeederPanel extends JPanel {
     }
 
     public void removeFeedingTime(FeedingPanel feedingTime) {
+        DB.makeGETRequest("removeFeedingTime/1/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
         mainPanel.remove(feedingTime);
         mainPanel.revalidate();
         mainPanel.repaint();
@@ -115,6 +130,7 @@ public class FeederPanel extends JPanel {
         int result = JOptionPane.showConfirmDialog(frame, editPanel, "Edit feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             if (txtWeightEdit.getText().matches("^\\d+$")) {
+                DB.makeGETRequest("editFeedingTime/"+txtWeightEdit.getText()+"/1/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
                 feedingTime.setWeight(Integer.parseInt(txtWeightEdit.getText()));
                 revalidate();
             } else {

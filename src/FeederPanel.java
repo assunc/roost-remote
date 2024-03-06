@@ -21,7 +21,9 @@ public class FeederPanel extends JPanel {
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         mainPanel.setPreferredSize(new Dimension(100, 100));
 
-        new JSONArray(DB.makeGETRequest("getFeedingTimes/1/")).forEach(time -> addFeedingTime(((JSONObject) time).getString("time"), ((JSONObject) time).getInt("weight")));
+        new JSONArray(DB.makeGETRequest("getFeedingTimes/"+MainScreen.coopId+"/"))
+                .forEach(time -> addFeedingTime(((JSONObject) time).getString("time"),
+                        ((JSONObject) time).getInt("weight")));
         revalidate();
 
         // addPanel
@@ -73,12 +75,15 @@ public class FeederPanel extends JPanel {
 
         btnAdd = new JButton("Add");
         btnAdd.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
+            if (JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time",
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
                 if (txtWeightAdd.getText().matches("^\\d+$")) {
-                    DB.makeGETRequest("addFeedingTime/1/"+timePicker.getSelectedItem()+"/"+txtWeightAdd.getText());
+                    DB.makeGETRequest("addFeedingTime/"+MainScreen.coopId+"/"+
+                            timePicker.getSelectedItem()+"/"+txtWeightAdd.getText());
                     addFeedingTime((String) timePicker.getSelectedItem(), Integer.parseInt(txtWeightAdd.getText()));
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Weight has to be a positive whole number", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(frame, "Weight has to be a positive whole number",
+                            "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
             timePicker.setSelectedIndex(0);
@@ -114,21 +119,25 @@ public class FeederPanel extends JPanel {
     }
 
     public void removeFeedingTime(FeedingPanel feedingTime) {
-        DB.makeGETRequest("removeFeedingTime/1/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
+        DB.makeGETRequest("removeFeedingTime/"+MainScreen.coopId+"/"+
+                feedingTime.getTime()+"/"+feedingTime.getWeight());
         mainPanel.remove(feedingTime);
         mainPanel.revalidate();
         mainPanel.repaint();
     }
 
     public void editFeedingTime(FeedingPanel feedingTime) {
-        int result = JOptionPane.showConfirmDialog(frame, editPanel, "Edit feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(frame, editPanel, "Edit feeding time",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             if (txtWeightEdit.getText().matches("^\\d+$")) {
-                DB.makeGETRequest("editFeedingTime/"+txtWeightEdit.getText()+"/1/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
+                DB.makeGETRequest("editFeedingTime/"+txtWeightEdit.getText()+"/"+
+                        MainScreen.coopId+"/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
                 feedingTime.setWeight(Integer.parseInt(txtWeightEdit.getText()));
                 revalidate();
             } else {
-                JOptionPane.showMessageDialog(frame, "Weight has to be a positive whole number", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Weight has to be a positive whole number",
+                        "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
         txtWeightEdit.setText("");

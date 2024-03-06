@@ -23,10 +23,12 @@ public class DoorPanel extends JPanel {
 
         timeOpen = new TimePicker();
         timeOpen.setSize(200, 50);
-        timeOpen.setSelectedItem(new JSONArray(DB.makeGETRequest("getOpenTime/1")).getJSONObject(0).getString("openTime"));
+        timeOpen.setSelectedItem(new JSONArray(DB.makeGETRequest("getOpenTime/"+
+                MainScreen.coopId)).getJSONObject(0).getString("openTime"));
 
         btnSetOpenTime = new JButton("Save Changes");
-        btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+timeOpen.getSelectedItem()+"/1"));
+        btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+
+                timeOpen.getSelectedItem()+"/"+MainScreen.coopId));
 
         openingTimePanel.add(lblOpeningTime);
         openingTimePanel.add(timeOpen);
@@ -40,10 +42,12 @@ public class DoorPanel extends JPanel {
 
         timeClose = new TimePicker();
         timeClose.setSize(200, 50);
-        timeClose.setSelectedItem(new JSONArray(DB.makeGETRequest("getCloseTime/1")).getJSONObject(0).getString("closeTime"));
+        timeClose.setSelectedItem(new JSONArray(DB.makeGETRequest("getCloseTime/"+
+                MainScreen.coopId)).getJSONObject(0).getString("closeTime"));
 
         btnSetCloseTime = new JButton("Save Changes");
-        btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+timeClose.getSelectedItem()+"/1"));
+        btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+
+                timeClose.getSelectedItem()+"/"+MainScreen.coopId));
 
 
         closingTimePanel.add(lblClosingTime);
@@ -51,7 +55,8 @@ public class DoorPanel extends JPanel {
         closingTimePanel.add(btnSetCloseTime);
 
         // Toggle button for manual control
-        boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/1")).getJSONObject(0).getInt("doorIsOpen")==0;
+        boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
+                MainScreen.coopId)).getJSONObject(0).getInt("doorIsOpen")==0;
         btnToggleDoor = new JToggleButton(doorIsOpen ? "Close Door" : "Open Door", doorIsOpen);
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {

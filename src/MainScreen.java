@@ -7,6 +7,7 @@ public class MainScreen extends JFrame{
     private static int SCREEN_WIDTH = 380;
     private static int SCREEN_HEIGHT = 680;
     private CardLayout card;
+    public static int coopId = 1;
 
     public MainScreen(){
         //generate Jframe

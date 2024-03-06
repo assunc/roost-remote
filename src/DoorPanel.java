@@ -1,3 +1,5 @@
+import org.json.JSONArray;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -5,11 +7,9 @@ import java.awt.event.*;
 public class DoorPanel extends JPanel {
 
     private JButton btnBack;
-    private JTextField txtOpeningTime;
-    private JTextField txtClosingTime;
-    private JButton btnChangeOpeningTime;
-    private JButton btnChangeClosingTime;
-    private JButton btnToggleDoor;
+    private TimePicker timeOpen, timeClose;
+    private JButton btnSetOpenTime, btnSetCloseTime;
+    private JToggleButton btnToggleDoor;
 
     public DoorPanel(MainScreen frame) {
         super();
@@ -18,35 +18,48 @@ public class DoorPanel extends JPanel {
         // Panel for Opening Time
         JPanel openingTimePanel = new JPanel();
         openingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JLabel lblOpeningTime = new JLabel("Opening Time:");
+
+        timeOpen = new TimePicker();
+        timeOpen.setSize(200, 50);
+        timeOpen.setSelectedItem(new JSONArray(DB.makeGETRequest("getOpenTime/1")).getJSONObject(0).getString("openTime"));
+
+        btnSetOpenTime = new JButton("Save Changes");
+        btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+timeOpen.getSelectedItem()+"/1"));
+
         openingTimePanel.add(lblOpeningTime);
-        txtOpeningTime = new JTextField("06:00", 5);
-        openingTimePanel.add(txtOpeningTime);
-        btnChangeOpeningTime = new JButton("Save Changes");
-        openingTimePanel.add(btnChangeOpeningTime);
+        openingTimePanel.add(timeOpen);
+        openingTimePanel.add(btnSetOpenTime);
 
         // Panel for Closing Time
         JPanel closingTimePanel = new JPanel();
         closingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+
         JLabel lblClosingTime = new JLabel("Closing Time:");
+
+        timeClose = new TimePicker();
+        timeClose.setSize(200, 50);
+        timeClose.setSelectedItem(new JSONArray(DB.makeGETRequest("getCloseTime/1")).getJSONObject(0).getString("closeTime"));
+
+        btnSetCloseTime = new JButton("Save Changes");
+        btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+timeClose.getSelectedItem()+"/1"));
+
+
         closingTimePanel.add(lblClosingTime);
-        txtClosingTime = new JTextField("18:00", 5);
-        closingTimePanel.add(txtClosingTime);
-        btnChangeClosingTime = new JButton("Save Changes");
-        closingTimePanel.add(btnChangeClosingTime);
+        closingTimePanel.add(timeClose);
+        closingTimePanel.add(btnSetCloseTime);
 
         // Toggle button for manual control
-        btnToggleDoor = new JButton("Open Door");
-        btnToggleDoor.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (btnToggleDoor.getText().equals("Open Door")) {
-                    btnToggleDoor.setText("Close Door");
-                    // Replace with your door closing logic here
-                } else {
-                    btnToggleDoor.setText("Open Door");
-                    // Replace with your door opening logic here
-                }
+        boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/1")).getJSONObject(0).getInt("doorIsOpen")==0;
+        btnToggleDoor = new JToggleButton(doorIsOpen ? "Close Door" : "Open Door", doorIsOpen);
+        btnToggleDoor.addActionListener(e -> {
+            if (((AbstractButton)e.getSource()).getModel().isSelected()) {
+                btnToggleDoor.setText("Close Door");
+                DB.makeGETRequest("setDoorIsOpen/0/1");
+            } else {
+                btnToggleDoor.setText("Open Door");
+                DB.makeGETRequest("setDoorIsOpen/1/1");
             }
         });
         btnToggleDoor.setAlignmentX(Component.CENTER_ALIGNMENT);

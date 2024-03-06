@@ -3,18 +3,11 @@ import java.awt.*;
 import org.json.*;
 
 public class FeederPanel extends JPanel {
-    private JButton btnBack;
-    private JButton btnAdd;
-    private JPanel mainPanel;
-    private JPanel buttonsPanel;
-    private JPanel addPanel;
-    private JPanel editPanel;
-    private JLabel lblTime;
-    private JComboBox<String> timePicker;
-    private JLabel lblWeightAdd;
-    private JTextField txtWeightAdd;
-    private JLabel lblWeightEdit;
-    private JTextField txtWeightEdit;
+    private JButton btnBack, btnAdd, btnClear;
+    private JPanel mainPanel, buttonsPanel, addPanel, editPanel;
+    private TimePicker timePicker;
+    private JLabel lblTime, lblWeightAdd, lblWeightEdit;
+    private JTextField txtWeightAdd, txtWeightEdit;
     private MainScreen frame;
 
     public FeederPanel(MainScreen parentFrame) {
@@ -28,6 +21,9 @@ public class FeederPanel extends JPanel {
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         mainPanel.setPreferredSize(new Dimension(100, 100));
 
+        new JSONArray(DB.makeGETRequest("getFeedingTimes/1/")).forEach(time -> addFeedingTime(((JSONObject) time).getString("time"), ((JSONObject) time).getInt("weight")));
+        revalidate();
+
         // addPanel
 
         addPanel = new JPanel();
@@ -40,11 +36,7 @@ public class FeederPanel extends JPanel {
         lblWeightAdd = new JLabel("Weight:");
         lblWeightAdd.setSize(80, 50);
 
-        String[] times = new String[48];
-        for(int i = 0; i < 48; i++) {
-            times[i] = i/2 + ":" + (i%2==0?"00":"30");
-        }
-        timePicker = new JComboBox<String>(times);
+        timePicker = new TimePicker();
         timePicker.setSize(200, 50);
 
         txtWeightAdd = new JTextField();
@@ -81,19 +73,10 @@ public class FeederPanel extends JPanel {
 
         btnAdd = new JButton("Add");
         btnAdd.addActionListener(e -> {
-            int result = JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
-            if (result == JOptionPane.OK_OPTION) {
+            if (JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
                 if (txtWeightAdd.getText().matches("^\\d+$")) {
-                    FeedingPanel temp = new FeedingPanel((String) timePicker.getSelectedItem(), Integer.valueOf(txtWeightAdd.getText()), this);
-                    int index = -1;
-                    for (int i = 0; i < mainPanel.getComponentCount(); i++) {
-                        if (temp.getTimeCompare() < ((FeedingPanel)mainPanel.getComponent(i)).getTimeCompare()) {
-                            index = i;
-                            break;
-                        }
-                    } 
-                    mainPanel.add(temp, index);
-                    revalidate();
+                    DB.makeGETRequest("addFeedingTime/1/"+timePicker.getSelectedItem()+"/"+txtWeightAdd.getText());
+                    addFeedingTime((String) timePicker.getSelectedItem(), Integer.parseInt(txtWeightAdd.getText()));
                 } else {
                     JOptionPane.showMessageDialog(frame, "Weight has to be a positive whole number", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -102,14 +85,36 @@ public class FeederPanel extends JPanel {
             txtWeightAdd.setText("");
         });
 
+        btnClear = new JButton("Clear");
+        btnClear.addActionListener(e -> {
+            for (int i = 0; i < mainPanel.getComponentCount();) {
+                removeFeedingTime((FeedingPanel) mainPanel.getComponent(0));
+            }
+        });
+
         buttonsPanel.add(btnBack);
         buttonsPanel.add(btnAdd);
- 
+        buttonsPanel.add(btnClear);
+
         add(buttonsPanel, BorderLayout.SOUTH);
         add(mainPanel, BorderLayout.CENTER);
     }
 
+    public void addFeedingTime(String time, int weight) {
+        FeedingPanel panel = new FeedingPanel(time, weight, this);
+        int index = -1;
+        for (int i = 0; i < mainPanel.getComponentCount(); i++) {
+            if (panel.getTimeCompare() < ((FeedingPanel)mainPanel.getComponent(i)).getTimeCompare()) {
+                index = i;
+                break;
+            }
+        }
+        mainPanel.add(panel, index);
+        revalidate();
+    }
+
     public void removeFeedingTime(FeedingPanel feedingTime) {
+        DB.makeGETRequest("removeFeedingTime/1/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
         mainPanel.remove(feedingTime);
         mainPanel.revalidate();
         mainPanel.repaint();
@@ -119,7 +124,8 @@ public class FeederPanel extends JPanel {
         int result = JOptionPane.showConfirmDialog(frame, editPanel, "Edit feeding time", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             if (txtWeightEdit.getText().matches("^\\d+$")) {
-                feedingTime.setWeight(Integer.valueOf(txtWeightEdit.getText()));
+                DB.makeGETRequest("editFeedingTime/"+txtWeightEdit.getText()+"/1/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
+                feedingTime.setWeight(Integer.parseInt(txtWeightEdit.getText()));
                 revalidate();
             } else {
                 JOptionPane.showMessageDialog(frame, "Weight has to be a positive whole number", "Error", JOptionPane.ERROR_MESSAGE);

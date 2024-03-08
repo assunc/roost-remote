@@ -94,3 +94,5 @@ public class Login extends JFrame{
             setVisible(true);
         }
     }
+
+//easteregg

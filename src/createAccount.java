@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.concurrent.TimeUnit;
+
 
 public class createAccount extends JFrame {
 
@@ -23,7 +25,6 @@ public class createAccount extends JFrame {
         setSize(400, 250);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
-
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
@@ -72,15 +73,24 @@ public class createAccount extends JFrame {
                 //String username = txtUsername.getText();
                 String password = new String(txtPassword.getText());
                 String confirmPassword = new String(txtConfirmPassword.getText());
-                if (password.length() > 4) {
+                if (password.length() > 0) {
                     if (password.equals(confirmPassword)) {
 
                         String username = txtUsername.getText();
                         String pswrd = Integer.toString(txtPassword.getText().hashCode());
+                        String iduser = "";
+                        String idcoop = "";
 
                         DBTest db = new DBTest();
                         db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateUser/" + username + "/" + pswrd);
+                        String iduserjson = db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getID/" + username);
 
+                        iduser =  db.parseJSONUserID(iduserjson);
+
+                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateCoop/" + iduser + "/" + "0" + "/" + "0" + "/" + "0" + "/" + "06:00" + "/" + "19:00" + "/" + "1");
+                        idcoop = db.parseJSONCoopID(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getCoopID/" + iduser));
+                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateFeedingTime/" + idcoop + "/" + "07:00" + "/" + "100");
+                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateFeedingTime/" + idcoop + "/" + "18:00" + "/" + "150");
                         JOptionPane.showMessageDialog(createAccount.this, "Account successfully created!");
                         setVisible(false);
                         loginScreen.setVisible(true); // Show the login screen again

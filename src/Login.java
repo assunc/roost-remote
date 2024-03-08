@@ -52,13 +52,18 @@ public class Login extends JFrame{
                 String u = txtUsername.getText();
                 String p = Integer.toString(txtPassword.getText().hashCode());
 
-
+                System.out.println(u);
                 DBTest db = new DBTest();
 
 
                 if (p.equals(db.parseJSONLogin(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/Login/" + u)))) {
                     JOptionPane.showMessageDialog(Login.this, "Login successful!");
-                    MainScreen mainScreen = new MainScreen();
+                    String iduser = "";
+                    String iduserjson = db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getID/" + u);
+                    iduser =  db.parseJSONUserID(iduserjson);
+                    String idcoop = "";
+                    idcoop = db.parseJSONCoopID(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getCoopID/" + iduser));
+                    MainScreen mainScreen = new MainScreen(idcoop);
                     mainScreen.setVisible(true);
                     setVisible(false);
                 } else {

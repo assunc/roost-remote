@@ -55,7 +55,37 @@ public class DBTest {
         return password;
     }
 
+    public String parseJSONUserID(String jsonString){
+        String id="";
 
+        try {
+            JSONArray array = new JSONArray(jsonString);
+            JSONObject curObject = array.getJSONObject(0);
+            id = Integer.toString(curObject.getInt("idUser"));
+
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        return id;
+    }
+
+
+    public String parseJSONCoopID(String jsonString){
+        String id="";
+
+        try {
+            JSONArray array = new JSONArray(jsonString);
+            JSONObject curObject = array.getJSONObject(0);
+            id = Integer.toString(curObject.getInt("idCoop"));
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        return id;
+    }
     public static void main(String[] args) {
         DBTest rc = new DBTest();
         String response = rc.makeGETRequest("https://studev.groept.be/api/a21ib2demo/all" );

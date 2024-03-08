@@ -7,11 +7,15 @@ public class MainScreen extends JFrame{
     private static int SCREEN_WIDTH = 380;
     private static int SCREEN_HEIGHT = 680;
     private CardLayout card;
-    public static int coopId = 1;
+    private int coopId;
+    //public int coopId;
 
-    public MainScreen(){
+    public MainScreen(String coopIdTemp) {
         //generate Jframe
         super("RoostRemote");
+        coopId = Integer.parseInt(coopIdTemp);
+        System.out.println(coopId);
+        DBTest db = new DBTest();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -26,6 +30,7 @@ public class MainScreen extends JFrame{
         mainScreen.setPreferredSize(new Dimension(100, 100));
         card = new CardLayout();
         mainScreen.setLayout(card);
+        mainScreen.setPreferredSize(new Dimension(100, 100));
 
         mainPanel = new MainPanel(this);
         mainPanel.setPreferredSize(new Dimension(100, 100));
@@ -34,7 +39,6 @@ public class MainScreen extends JFrame{
         feederPanel.setPreferredSize(new Dimension(100, 100));
 
         doorPanel = new DoorPanel(this);
-        doorPanel.setPreferredSize(new Dimension(100, 100));
 
         mainScreen.add(feederPanel, "feeder");
         mainScreen.add(doorPanel, "door");
@@ -49,5 +53,9 @@ public class MainScreen extends JFrame{
 
     public void openScreen(String screen) {
         card.show(mainScreen, screen);
+    }
+
+    public int getCoopId(){
+        return coopId;
     }
 }

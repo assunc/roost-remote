@@ -21,7 +21,7 @@ public class FeederPanel extends JPanel {
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         mainPanel.setPreferredSize(new Dimension(100, 100));
 
-        new JSONArray(DB.makeGETRequest("getFeedingTimes/"+MainScreen.coopId+"/"))
+        new JSONArray(DB.makeGETRequest("getFeedingTimes/"+parentFrame.getCoopId()+"/"))
                 .forEach(time -> addFeedingTime(((JSONObject) time).getString("time"),
                         ((JSONObject) time).getInt("weight")));
         revalidate();
@@ -78,7 +78,7 @@ public class FeederPanel extends JPanel {
             if (JOptionPane.showConfirmDialog(frame, addPanel, "Add new feeding time",
                     JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
                 if (txtWeightAdd.getText().matches("^\\d+$")) {
-                    DB.makeGETRequest("addFeedingTime/"+MainScreen.coopId+"/"+
+                    DB.makeGETRequest("addFeedingTime/"+parentFrame.getCoopId()+"/"+
                             timePicker.getSelectedItem()+"/"+txtWeightAdd.getText());
                     addFeedingTime((String) timePicker.getSelectedItem(), Integer.parseInt(txtWeightAdd.getText()));
                 } else {
@@ -119,7 +119,7 @@ public class FeederPanel extends JPanel {
     }
 
     public void removeFeedingTime(FeedingPanel feedingTime) {
-        DB.makeGETRequest("removeFeedingTime/"+MainScreen.coopId+"/"+
+        DB.makeGETRequest("removeFeedingTime/"+frame.getCoopId()+"/"+
                 feedingTime.getTime()+"/"+feedingTime.getWeight());
         mainPanel.remove(feedingTime);
         mainPanel.revalidate();
@@ -132,7 +132,7 @@ public class FeederPanel extends JPanel {
         if (result == JOptionPane.OK_OPTION) {
             if (txtWeightEdit.getText().matches("^\\d+$")) {
                 DB.makeGETRequest("editFeedingTime/"+txtWeightEdit.getText()+"/"+
-                        MainScreen.coopId+"/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
+                        frame.getCoopId()+"/"+feedingTime.getTime()+"/"+feedingTime.getWeight());
                 feedingTime.setWeight(Integer.parseInt(txtWeightEdit.getText()));
                 revalidate();
             } else {

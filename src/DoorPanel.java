@@ -24,11 +24,11 @@ public class DoorPanel extends JPanel {
         timeOpen = new TimePicker();
         timeOpen.setSize(200, 50);
         timeOpen.setSelectedItem(new JSONArray(DB.makeGETRequest("getOpenTime/"+
-                MainScreen.coopId)).getJSONObject(0).getString("openTime"));
+                frame.getCoopId())).getJSONObject(0).getString("openTime"));
 
         btnSetOpenTime = new JButton("Save Changes");
         btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+
-                timeOpen.getSelectedItem()+"/"+MainScreen.coopId));
+                timeOpen.getSelectedItem()+"/"+frame.getCoopId()));
 
         openingTimePanel.add(lblOpeningTime);
         openingTimePanel.add(timeOpen);
@@ -43,11 +43,11 @@ public class DoorPanel extends JPanel {
         timeClose = new TimePicker();
         timeClose.setSize(200, 50);
         timeClose.setSelectedItem(new JSONArray(DB.makeGETRequest("getCloseTime/"+
-                MainScreen.coopId)).getJSONObject(0).getString("closeTime"));
+                frame.getCoopId())).getJSONObject(0).getString("closeTime"));
 
         btnSetCloseTime = new JButton("Save Changes");
         btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+
-                timeClose.getSelectedItem()+"/"+MainScreen.coopId));
+                timeClose.getSelectedItem()+"/"+frame.getCoopId()));
 
 
         closingTimePanel.add(lblClosingTime);
@@ -56,7 +56,7 @@ public class DoorPanel extends JPanel {
 
         // Toggle button for manual control
         boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
-                MainScreen.coopId)).getJSONObject(0).getInt("doorIsOpen")==0;
+                frame.getCoopId())).getJSONObject(0).getInt("doorIsOpen")==0;
         btnToggleDoor = new JToggleButton(doorIsOpen ? "Close Door" : "Open Door", doorIsOpen);
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {

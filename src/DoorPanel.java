@@ -56,7 +56,7 @@ public class DoorPanel extends JPanel {
 
         // Toggle button for manual control
         boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
-                frame.getCoopId())).getJSONObject(0).getInt("doorIsOpen")==0;
+                frame.getCoopId())).getJSONObject(0).getInt("doorIsOpen")==1;
         btnToggleDoor = new JToggleButton(doorIsOpen ? "Close Door" : "Open Door", doorIsOpen);
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {

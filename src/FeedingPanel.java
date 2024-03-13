@@ -1,10 +1,13 @@
 import java.awt.*;
+import java.io.File;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class FeedingPanel extends JPanel {
     private JButton btnEdit, btnRemove;
     private JLabel lblTime, lblWeight;
     int weight;
+    private ImageIcon edit, remove;
 
     public FeedingPanel(String time, int weight, FeederPanel panel) {
         super();
@@ -17,10 +20,23 @@ public class FeedingPanel extends JPanel {
 
         lblWeight = new JLabel(weight + "g");
 
-        btnEdit = new JButton("Edit");
+        try {
+            edit = new ImageIcon(ImageIO.read(new File("images/pencil-edit-button.png"))
+                    .getScaledInstance(15, 15, Image.SCALE_AREA_AVERAGING));
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+        }
+        try {
+            remove = new ImageIcon(ImageIO.read(new File("images/delete-button.png"))
+                    .getScaledInstance(15, 15, Image.SCALE_AREA_AVERAGING));
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+        }
+
+        btnEdit = new JButton(edit);
         btnEdit.addActionListener(e -> panel.editFeedingTime(this));
 
-        btnRemove = new JButton("Remove");
+        btnRemove = new JButton(remove);
         btnRemove.addActionListener(e -> panel.removeFeedingTime(this));
 
         add(lblTime);

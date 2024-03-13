@@ -24,12 +24,12 @@ public class MainScreen extends JFrame{
         setResizable(false);
 
         headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setPreferredSize(new Dimension(100, 100));
+        headerPanel.setPreferredSize(new Dimension(100, 110));
         try {
             ImageIcon imageLogo = new ImageIcon(ImageIO.read(new File("images/logo.png"))
                     .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
             JLabel lblLogo = new JLabel(imageLogo);
-            headerPanel.add(lblLogo, BorderLayout.CENTER);
+            headerPanel.add(lblLogo, BorderLayout.SOUTH);
         } catch (Exception e) {
             System.err.println("Error loading image: " + e.getMessage());
         }

@@ -107,28 +107,28 @@ public class FeederPanel extends JPanel {
         buttonsPanel.add(btnAdd);
         buttonsPanel.add(btnClear);
 
+        // totalFoodPanel
+
         totalFoodPanel = new JPanel();
         totalFoodPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0));
-        totalFoodPanel.setPreferredSize(new Dimension(100, 50));
+        totalFoodPanel.setPreferredSize(new Dimension(200, 50));
 
         totalFoodField = new JTextField();
-        totalFoodField.setSize(2000, 50);
+        totalFoodField.setSize(100, 50);
         totalFoodField.setEditable(false);
         float food = new JSONArray(DB.makeGETRequest("getFood/"+
                 frame.getCoopId())).getJSONObject(0).getFloat("food");
-        totalFoodField.setText("" +food);
-        Timer timer = new Timer(6000, new ActionListener() { // Check every minute
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                float food = new JSONArray(DB.makeGETRequest("getFood/"+
-                        frame.getCoopId())).getJSONObject(0).getFloat("food");
-                totalFoodField.setText("" +food);
-                totalFoodField.revalidate();
-                totalFoodField.repaint();
-            }
+        totalFoodField.setText(""+food);
+        // Check every minute
+        Timer timer = new Timer(6000, e -> {
+            float food1 = new JSONArray(DB.makeGETRequest("getFood/"+
+                    frame.getCoopId())).getJSONObject(0).getFloat("food");
+            totalFoodField.setText("" + food1);
+            totalFoodField.revalidate();
+            totalFoodField.repaint();
         });
         timer.start();
-        //nr = Integer.toString(curObject.getInt("presentChicken"));
+
         totalFoodLbl = new JLabel();
         totalFoodLbl.setSize(200, 50);
         totalFoodLbl.setText("Food inside the container:");
@@ -140,9 +140,9 @@ public class FeederPanel extends JPanel {
         totalFoodPanel.add(totalFoodField);
         totalFoodPanel.add(gramLbl);
 
+        add(mainPanel, BorderLayout.NORTH);
         add(totalFoodPanel, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.SOUTH);
-        add(mainPanel, BorderLayout.NORTH);
     }
 
     public boolean addFeedingTime(String time, int weight) {

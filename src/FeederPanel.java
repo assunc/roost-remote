@@ -1,7 +1,9 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.Objects;
 
 import org.json.*;
@@ -13,6 +15,7 @@ public class FeederPanel extends JPanel {
     private JLabel lblTime, lblWeightAdd, lblWeightEdit, totalFoodLbl, gramLbl;
     private JTextField txtWeightAdd, txtWeightEdit, totalFoodField;
     private MainScreen frame;
+    private ImageIcon back;
 
     public FeederPanel(MainScreen parentFrame) {
         super();
@@ -74,7 +77,13 @@ public class FeederPanel extends JPanel {
         buttonsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0));
         buttonsPanel.setPreferredSize(new Dimension(100, 50));
 
-        btnBack = new JButton("Back");
+        try {
+            back = new ImageIcon(ImageIO.read(new File("images/back-arrow.png"))
+                    .getScaledInstance(15, 15, Image.SCALE_AREA_AVERAGING));
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+        }
+        btnBack = new JButton(back);
         btnBack.addActionListener(e -> frame.openScreen("main"));
 
         btnAdd = new JButton("Add");

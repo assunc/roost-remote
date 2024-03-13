@@ -1,8 +1,10 @@
 import org.json.JSONArray;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
 
 public class DoorPanel extends JPanel {
 
@@ -10,6 +12,7 @@ public class DoorPanel extends JPanel {
     private TimePicker timeOpen, timeClose;
     private JButton btnSetOpenTime, btnSetCloseTime;
     private JToggleButton btnToggleDoor;
+    private ImageIcon sun, moon, back, lock, unlock;
 
     public DoorPanel(MainScreen frame) {
         super();
@@ -17,7 +20,7 @@ public class DoorPanel extends JPanel {
 
         // Panel for Opening Time
         JPanel openingTimePanel = new JPanel();
-        openingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        openingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
 
         JLabel lblOpeningTime = new JLabel("Opening Time:");
 
@@ -30,13 +33,27 @@ public class DoorPanel extends JPanel {
         btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+
                 timeOpen.getSelectedItem()+"/"+frame.getCoopId()));
 
+
+        try {
+            sun = new ImageIcon(ImageIO.read(new File("images/rising-sun.png"))
+                    .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
+            lock =  new ImageIcon(ImageIO.read(new File("images/padlock.png"))
+                    .getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING));
+            unlock =  new ImageIcon(ImageIO.read(new File("images/padlock-unlock.png"))
+                    .getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING));
+        } catch (Exception e) {
+            System.err.println("Error loading image sun: " + e.getMessage());
+        }
+        JLabel lblSun = new JLabel(sun);
+
         openingTimePanel.add(lblOpeningTime);
         openingTimePanel.add(timeOpen);
         openingTimePanel.add(btnSetOpenTime);
+        openingTimePanel.add(lblSun);
 
         // Panel for Closing Time
         JPanel closingTimePanel = new JPanel();
-        closingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        closingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10 , 30));
 
         JLabel lblClosingTime = new JLabel("Closing Time:");
 
@@ -49,10 +66,18 @@ public class DoorPanel extends JPanel {
         btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+
                 timeClose.getSelectedItem()+"/"+frame.getCoopId()));
 
+        try {
+            moon = new ImageIcon(ImageIO.read(new File("images/moon2.png"))
+                    .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
+        } catch (Exception e) {
+            System.err.println("Error loading image moon: " + e.getMessage());
+        }
+        JLabel lblMoon = new JLabel(moon);
 
         closingTimePanel.add(lblClosingTime);
         closingTimePanel.add(timeClose);
         closingTimePanel.add(btnSetCloseTime);
+        closingTimePanel.add(lblMoon);
 
         // Toggle button for manual control
        // boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
@@ -64,22 +89,28 @@ public class DoorPanel extends JPanel {
         boolean doorIsOpen = doorIsOpenString == 1;
         btnToggleDoor = new JToggleButton();
         if (doorIsOpen)
-            btnToggleDoor.setText("Close Door");
+            btnToggleDoor.setIcon(lock);
         else
-            btnToggleDoor.setText("Open Door");
+            btnToggleDoor.setIcon(unlock);
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {
-                btnToggleDoor.setText("Open Door");
+                btnToggleDoor.setIcon(unlock);
                 db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/changeStateDoor/" + "0" + "/" + frame.getCoopId());
             } else {
-                btnToggleDoor.setText("Close Door");
+                btnToggleDoor.setIcon(lock);
                 db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/changeStateDoor/" + "1" + "/" + frame.getCoopId());
             }
         });
         btnToggleDoor.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Back button
-        btnBack = new JButton("Back");
+        try {
+            back = new ImageIcon(ImageIO.read(new File("images/back-arrow.png"))
+                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
+        } catch (Exception e) {
+            System.err.println("Error loading image back: " + e.getMessage());
+        }
+        btnBack = new JButton(back);
         btnBack.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnBack.addActionListener(e -> frame.openScreen("main"));
 

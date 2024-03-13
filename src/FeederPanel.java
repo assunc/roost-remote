@@ -180,3 +180,4 @@ public class FeederPanel extends JPanel {
         txtWeightEdit.setText("");
     }
 }
+//easteregg

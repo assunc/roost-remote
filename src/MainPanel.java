@@ -31,30 +31,26 @@ public class MainPanel extends JPanel {
         upButton = new JButton("^");
         downButton = new JButton("v");
 
-        upButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int total = Integer.parseInt(totalChickens);
-                total += 1;
-                totalChickensTextField.setText(String.valueOf(total));
-                totalChickens = String.valueOf(total);
-                frame.setVisible(false);
-                frame.setVisible(true);
-                db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/setTotalChickens/" + total + "/" + coopId);
-            }
+        upButton.addActionListener(e -> {
+            int total = Integer.parseInt(totalChickens);
+            total += 1;
+            totalChickensTextField.setText(String.valueOf(total));
+            totalChickens = String.valueOf(total);
+            frame.setVisible(false);
+            frame.setVisible(true);
+            db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/setTotalChickens/" + total + "/" + coopId);
         });
 
-        downButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int total = Integer.parseInt(totalChickens);
-                total -= 1;
-                if (total < 0)
-                    total = 0;
-                totalChickensTextField.setText(String.valueOf(total));
-                totalChickens = String.valueOf(total);
-                frame.setVisible(false);
-                frame.setVisible(true);
-                db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/setTotalChickens/" + total + "/" + coopId);
-            }
+        downButton.addActionListener(e -> {
+            int total = Integer.parseInt(totalChickens);
+            total -= 1;
+            if (total < 0)
+                total = 0;
+            totalChickensTextField.setText(String.valueOf(total));
+            totalChickens = String.valueOf(total);
+            frame.setVisible(false);
+            frame.setVisible(true);
+            db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/setTotalChickens/" + total + "/" + coopId);
         });
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;

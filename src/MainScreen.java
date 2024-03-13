@@ -24,13 +24,12 @@ public class MainScreen extends JFrame{
         setResizable(false);
 
         headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setPreferredSize(new Dimension(100, 75));
-        headerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+        headerPanel.setPreferredSize(new Dimension(100, 100));
         try {
-            ImageIcon image = new ImageIcon(ImageIO.read(new File("images/logo.png")).getScaledInstance(65, 65, Image.SCALE_AREA_AVERAGING));
-
-            JLabel imageLabel = new JLabel(image);
-            headerPanel.add(imageLabel, BorderLayout.WEST);
+            ImageIcon imageLogo = new ImageIcon(ImageIO.read(new File("images/logo.png"))
+                    .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
+            JLabel lblLogo = new JLabel(imageLogo);
+            headerPanel.add(lblLogo, BorderLayout.CENTER);
         } catch (Exception e) {
             System.err.println("Error loading image: " + e.getMessage());
         }

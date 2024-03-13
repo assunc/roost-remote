@@ -2,7 +2,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 
 public class MainScreen extends JFrame{
@@ -18,8 +17,6 @@ public class MainScreen extends JFrame{
         //generate Jframe
         super("RoostRemote");
         coopId = Integer.parseInt(coopIdTemp);
-        //System.out.println(coopId);
-        DBTest db = new DBTest();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -27,12 +24,13 @@ public class MainScreen extends JFrame{
         setResizable(false);
 
         headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setPreferredSize(new Dimension(100, 50));
+        headerPanel.setPreferredSize(new Dimension(100, 75));
         headerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
         try {
-            ImageIcon image = new ImageIcon("ChickenLogo.jpg");
+            ImageIcon image = new ImageIcon(ImageIO.read(new File("images/logo.png")).getScaledInstance(65, 65, Image.SCALE_AREA_AVERAGING));
+
             JLabel imageLabel = new JLabel(image);
-            headerPanel.add(imageLabel, BorderLayout.NORTH);
+            headerPanel.add(imageLabel, BorderLayout.WEST);
         } catch (Exception e) {
             System.err.println("Error loading image: " + e.getMessage());
         }

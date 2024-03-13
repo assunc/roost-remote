@@ -1,13 +1,16 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class MainPanel extends JPanel {
     private JButton btnFeeder, btnDoor, upButton, downButton;
     private JLabel lblTitle, totalChickensLabel, currentChickensLabel, emptyLbl;
     private JTextField totalChickensTextField, currentChickensTextField;
     private String totalChickens;
+    private ImageIcon imgPlus, imgMinus;
 
     public MainPanel(MainScreen frame) {
         super();
@@ -28,37 +31,38 @@ public class MainPanel extends JPanel {
         totalChickensTextField = new JTextField(5);
         totalChickensTextField.setEditable(false);
         totalChickensTextField.setText(totalChickens); // Set initial value
-        upButton = new JButton("^");
-        downButton = new JButton("v");
+
+        try {
+            imgPlus = new ImageIcon(ImageIO.read(new File("images/plus.png"))
+                    .getScaledInstance(10, 10, Image.SCALE_DEFAULT));
+            imgMinus = new ImageIcon(ImageIO.read(new File("images/minus.png"))
+                    .getScaledInstance(10, 10, Image.SCALE_DEFAULT));
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+        }
+
+        upButton = new JButton(imgPlus);
+        downButton = new JButton(imgMinus);
 
         upButton.addActionListener(e -> {
-            int total = Integer.parseInt(totalChickens);
-            total += 1;
+            int total = Integer.parseInt(totalChickens)+1;
             totalChickensTextField.setText(String.valueOf(total));
             totalChickens = String.valueOf(total);
-            frame.setVisible(false);
-            frame.setVisible(true);
+            revalidate();
             db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/setTotalChickens/" + total + "/" + coopId);
         });
 
         downButton.addActionListener(e -> {
-            int total = Integer.parseInt(totalChickens);
-            total -= 1;
-            if (total < 0)
-                total = 0;
+            int total = Math.max(0, Integer.parseInt(totalChickens)-1);
             totalChickensTextField.setText(String.valueOf(total));
             totalChickens = String.valueOf(total);
-            frame.setVisible(false);
-            frame.setVisible(true);
+            revalidate();
             db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/setTotalChickens/" + total + "/" + coopId);
         });
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
         c.gridy = 0;
         chickenPanel.add(lblTitle, c);
-        //chickenPanel.add(lblTitle);
-        //chickenPanel.add(emptyLbl);
-        //chickenPanel.add(emptyLbl);
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 0;
@@ -81,15 +85,12 @@ public class MainPanel extends JPanel {
         currentChickensLabel = new JLabel("Current chickens inside the coop: ");
         currentChickensTextField = new JTextField(5);
         currentChickensTextField.setEditable(false);
-        String currentChicken = "";
-        currentChicken = db.parseJSONgetCurrentChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getPresentChickens/" + coopId));
+        String currentChicken = db.parseJSONgetCurrentChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getPresentChickens/" + coopId));
         currentChickensTextField.setText(currentChicken); // Set value from database
-        Timer timer = new Timer(5000, new ActionListener() { // Check every 5 seconds
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String currentChicken = db.parseJSONgetCurrentChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getPresentChickens/" + coopId));
-                currentChickensTextField.setText(currentChicken);
-            }
+        // Check every 5 seconds
+        Timer timer = new Timer(5000, e -> {
+            String currentChicken1 = db.parseJSONgetCurrentChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getPresentChickens/" + coopId));
+            currentChickensTextField.setText(currentChicken1);
         });
         timer.start();
 
@@ -119,4 +120,3 @@ public class MainPanel extends JPanel {
 
     }
 }
-//easteregg

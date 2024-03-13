@@ -23,10 +23,6 @@ public class FeedingPanel extends JPanel {
         try {
             edit = new ImageIcon(ImageIO.read(new File("images/pencil-edit-button.png"))
                     .getScaledInstance(15, 15, Image.SCALE_AREA_AVERAGING));
-        } catch (Exception e) {
-            System.err.println("Error loading image: " + e.getMessage());
-        }
-        try {
             remove = new ImageIcon(ImageIO.read(new File("images/delete-button.png"))
                     .getScaledInstance(15, 15, Image.SCALE_AREA_AVERAGING));
         } catch (Exception e) {
@@ -61,4 +57,3 @@ public class FeedingPanel extends JPanel {
     }
 
 }
-//easteregg

@@ -55,16 +55,25 @@ public class DoorPanel extends JPanel {
         closingTimePanel.add(btnSetCloseTime);
 
         // Toggle button for manual control
-        boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
-                frame.getCoopId())).getJSONObject(0).getInt("doorIsOpen")==0;
-        btnToggleDoor = new JToggleButton(doorIsOpen ? "Close Door" : "Open Door", doorIsOpen);
+       // boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
+       //         frame.getCoopId())).getJSONObject(0).getInt("doorIsOpen")==
+        DBTest db = new DBTest();
+        int doorIsOpenString = db.parseJSONgetDoor(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getDoorIsOpen/" + frame.getCoopId()));
+        //System.out.println("The value of doorIsOpen is:" + doorIsOpenString);
+
+        boolean doorIsOpen = doorIsOpenString == 1;
+        btnToggleDoor = new JToggleButton();
+        if (doorIsOpen)
+            btnToggleDoor.setText("Close Door");
+        else
+            btnToggleDoor.setText("Open Door");
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {
-                btnToggleDoor.setText("Close Door");
-                DB.makeGETRequest("setDoorIsOpen/0/1");
-            } else {
                 btnToggleDoor.setText("Open Door");
-                DB.makeGETRequest("setDoorIsOpen/1/1");
+                db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/changeStateDoor/" + "0" + "/" + frame.getCoopId());
+            } else {
+                btnToggleDoor.setText("Close Door");
+                db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/changeStateDoor/" + "1" + "/" + frame.getCoopId());
             }
         });
         btnToggleDoor.setAlignmentX(Component.CENTER_ALIGNMENT);

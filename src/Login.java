@@ -52,7 +52,7 @@ public class Login extends JFrame{
                 String u = txtUsername.getText();
                 String p = Integer.toString(txtPassword.getText().hashCode());
 
-                System.out.println(u);
+               // System.out.println(u);
                 DBTest db = new DBTest();
 
 

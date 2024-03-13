@@ -1,5 +1,9 @@
+//original code
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 
 public class MainScreen extends JFrame{
     private JButton btnSettings, btnProfile;
@@ -14,17 +18,24 @@ public class MainScreen extends JFrame{
         //generate Jframe
         super("RoostRemote");
         coopId = Integer.parseInt(coopIdTemp);
-        System.out.println(coopId);
+        //System.out.println(coopId);
         DBTest db = new DBTest();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setLayout(new BorderLayout());
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
         setResizable(false);
 
-        headerPanel = new JPanel();
+        headerPanel = new JPanel(new BorderLayout());
         headerPanel.setPreferredSize(new Dimension(100, 50));
         headerPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 5));
+        try {
+            ImageIcon image = new ImageIcon("ChickenLogo.jpg");
+            JLabel imageLabel = new JLabel(image);
+            headerPanel.add(imageLabel, BorderLayout.NORTH);
+        } catch (Exception e) {
+            System.err.println("Error loading image: " + e.getMessage());
+        }
 
         mainScreen = new JPanel();
         mainScreen.setPreferredSize(new Dimension(100, 100));
@@ -59,5 +70,3 @@ public class MainScreen extends JFrame{
         return coopId;
     }
 }
-
-//easteregg

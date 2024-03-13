@@ -1,13 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import org.json.*;
 
 public class FeederPanel extends JPanel {
     private JButton btnBack, btnAdd, btnClear;
-    private JPanel mainPanel, buttonsPanel, addPanel, editPanel;
+    private JPanel mainPanel, buttonsPanel, addPanel, editPanel, totalFoodPanel;
     private TimePicker timePicker;
-    private JLabel lblTime, lblWeightAdd, lblWeightEdit;
-    private JTextField txtWeightAdd, txtWeightEdit;
+    private JLabel lblTime, lblWeightAdd, lblWeightEdit, totalFoodLbl, gramLbl;
+    private JTextField txtWeightAdd, txtWeightEdit, totalFoodField;
     private MainScreen frame;
 
     public FeederPanel(MainScreen parentFrame) {
@@ -19,7 +22,7 @@ public class FeederPanel extends JPanel {
 
         mainPanel = new JPanel();
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        mainPanel.setPreferredSize(new Dimension(100, 100));
+        mainPanel.setPreferredSize(new Dimension(100, 500));
 
         new JSONArray(DB.makeGETRequest("getFeedingTimes/"+parentFrame.getCoopId()+"/"))
                 .forEach(time -> addFeedingTime(((JSONObject) time).getString("time"),
@@ -101,8 +104,42 @@ public class FeederPanel extends JPanel {
         buttonsPanel.add(btnAdd);
         buttonsPanel.add(btnClear);
 
+        totalFoodPanel = new JPanel();
+        totalFoodPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0));
+        totalFoodPanel.setPreferredSize(new Dimension(100, 50));
+
+        totalFoodField = new JTextField();
+        totalFoodField.setSize(2000, 50);
+        totalFoodField.setEditable(false);
+        float food = new JSONArray(DB.makeGETRequest("getFood/"+
+                frame.getCoopId())).getJSONObject(0).getFloat("food");
+        totalFoodField.setText("" +food);
+        Timer timer = new Timer(6000, new ActionListener() { // Check every minute
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                float food = new JSONArray(DB.makeGETRequest("getFood/"+
+                        frame.getCoopId())).getJSONObject(0).getFloat("food");
+                totalFoodField.setText("" +food);
+                totalFoodField.revalidate();
+                totalFoodField.repaint();
+            }
+        });
+        timer.start();
+        //nr = Integer.toString(curObject.getInt("presentChicken"));
+        totalFoodLbl = new JLabel();
+        totalFoodLbl.setSize(200, 50);
+        totalFoodLbl.setText("Food inside the container:");
+
+        gramLbl = new JLabel();
+        gramLbl.setText("grams");
+
+        totalFoodPanel.add(totalFoodLbl);
+        totalFoodPanel.add(totalFoodField);
+        totalFoodPanel.add(gramLbl);
+
+        add(totalFoodPanel, BorderLayout.CENTER);
         add(buttonsPanel, BorderLayout.SOUTH);
-        add(mainPanel, BorderLayout.CENTER);
+        add(mainPanel, BorderLayout.NORTH);
     }
 
     public void addFeedingTime(String time, int weight) {

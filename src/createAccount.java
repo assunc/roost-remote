@@ -87,7 +87,7 @@ public class createAccount extends JFrame {
 
                         iduser =  db.parseJSONUserID(iduserjson);
 
-                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateCoop/" + iduser + "/" + "0" + "/" + "0" + "/" + "0" + "/" + "06:00" + "/" + "19:00" + "/" + "1");
+                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateCoop/" + iduser + "/" + "0" + "/" + "0" + "/" + "0" + "/" + "6:00" + "/" + "19:00" + "/" + "1");
                         idcoop = db.parseJSONCoopID(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getCoopID/" + iduser));
                         db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateFeedingTime/" + idcoop + "/" + "07:00" + "/" + "100");
                         db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateFeedingTime/" + idcoop + "/" + "18:00" + "/" + "150");

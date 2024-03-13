@@ -86,6 +86,51 @@ public class DBTest {
         }
         return id;
     }
+
+    public String parseJSONgetTotalChickens(String jsonString){
+        String nr="";
+
+        try {
+            JSONArray array = new JSONArray(jsonString);
+            JSONObject curObject = array.getJSONObject(0);
+            nr = Integer.toString(curObject.getInt("totalChicken"));
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        return nr;
+    }
+
+    public String parseJSONgetCurrentChickens(String jsonString){
+        String nr="";
+
+        try {
+            JSONArray array = new JSONArray(jsonString);
+            JSONObject curObject = array.getJSONObject(0);
+            nr = Integer.toString(curObject.getInt("presentChicken"));
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        return nr;
+    }
+
+    public int parseJSONgetDoor(String jsonString){
+        int nr = 0;
+
+        try {
+            JSONArray array = new JSONArray(jsonString);
+            JSONObject curObject = array.getJSONObject(0);
+            nr = curObject.getInt("doorIsOpen");
+
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+        return nr;
+    }
     public static void main(String[] args) {
         DBTest rc = new DBTest();
         String response = rc.makeGETRequest("https://studev.groept.be/api/a21ib2demo/all" );

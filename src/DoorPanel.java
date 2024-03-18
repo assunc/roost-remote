@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.time.LocalTime;
 
 public class DoorPanel extends JPanel {
 
@@ -12,6 +13,7 @@ public class DoorPanel extends JPanel {
     private TimePicker timeOpen, timeClose;
     private JButton btnSetOpenTime, btnSetCloseTime;
     private JToggleButton btnToggleDoor;
+
     private ImageIcon sun, moon, back, lock, unlock;
 
     public DoorPanel(MainScreen frame) {
@@ -38,9 +40,9 @@ public class DoorPanel extends JPanel {
             sun = new ImageIcon(ImageIO.read(new File("images/rising-sun.png"))
                     .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
             lock =  new ImageIcon(ImageIO.read(new File("images/padlock.png"))
-                    .getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING));
+                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
             unlock =  new ImageIcon(ImageIO.read(new File("images/padlock-unlock.png"))
-                    .getScaledInstance(50, 50, Image.SCALE_AREA_AVERAGING));
+                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
         } catch (Exception e) {
             System.err.println("Error loading image sun: " + e.getMessage());
         }
@@ -119,6 +121,82 @@ public class DoorPanel extends JPanel {
         add(btnToggleDoor); // Moved the toggle button here
         add(Box.createVerticalStrut(10)); // Added a vertical strut for spacing
         add(btnBack);
+
+        LocalTime currentTime = LocalTime.now();
+        int currentHour = currentTime.getHour();
+        int currentMinute = currentTime.getMinute();
+        String nowTime = currentHour + ":" + currentMinute;
+        String closingTime = (new JSONArray(DB.makeGETRequest("getCloseTime/"+
+                frame.getCoopId())).getJSONObject(0).getString("closeTime"));
+        String totalChickens = db.parseJSONgetTotalChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getTotalChicken/" + frame.getCoopId()));
+        String currentChicken = db.parseJSONgetCurrentChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getPresentChickens/" + frame.getCoopId()));
+        if (Integer.parseInt(currentChicken) < Integer.parseInt(totalChickens) && compareTimes(nowTime, closingTime))
+            displayErrorMessage();
+        System.out.println(closingTime);
+        System.out.println(nowTime);
+    }
+    public boolean compareTimes (String t1, String t2)
+    {
+        String[] T1 = t1.split(":");
+        String[] T2 = t2.split(":");
+        if (Integer.parseInt(T1[0]) > Integer.parseInt(T2[0]))
+            return true;
+        else
+            if (Integer.parseInt(T1[0]) == Integer.parseInt(T2[0]))
+                return Integer.parseInt(T1[1]) >= Integer.parseInt(T2[1]);
+        return false;
+    }
+
+    private void displayErrorMessage() {
+        JFrame errorFrame = new JFrame("Error!");
+        errorFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel errorPanel = new JPanel();
+        errorPanel.setLayout(new BorderLayout());
+        errorPanel.setBackground(Color.RED);
+
+        JLabel errorMessageLabel = new JLabel("<html><center>WARNING! It is closing time, but not all chickens are inside.</center></html>");
+        errorMessageLabel.setForeground(Color.WHITE);
+        errorMessageLabel.setFont(new Font("Arial", Font.BOLD, 16));
+
+        JButton closeButton = new JButton("Close");
+        closeButton.addActionListener(e -> errorFrame.dispose());
+        closeButton.setPreferredSize(new Dimension(100, 50));
+        closeButton.setBackground(Color.WHITE);
+        closeButton.setOpaque(true);
+        closeButton.setBorderPainted(false);
+        closeButton.setFocusPainted(false);
+        closeButton.setFont(new Font("Arial", Font.BOLD, 14));
+        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        errorPanel.add(errorMessageLabel, BorderLayout.CENTER);
+        errorPanel.add(closeButton, BorderLayout.SOUTH);
+
+        errorFrame.add(errorPanel);
+        errorFrame.pack();
+        errorFrame.setLocationRelativeTo(null);
+        errorFrame.setVisible(true);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //easteregg
+//kiss you all

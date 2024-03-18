@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +21,31 @@ public class Login extends JFrame{
 
             JPanel panel = new JPanel(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
+
+             class RoundedBorder implements Border {
+
+                private int radius;
+
+
+                RoundedBorder(int radius) {
+                    this.radius = radius;
+                }
+
+
+                public Insets getBorderInsets(Component c) {
+                    return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
+                }
+
+
+                public boolean isBorderOpaque() {
+                    return true;
+                }
+
+
+                public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+                    g.drawRoundRect(x, y, width-1, height-1, radius, radius);
+                }
+            }
 
             // Username label
             lblUsername = new JLabel("Username:");
@@ -48,6 +74,7 @@ public class Login extends JFrame{
 
             // Login button
             btnLogin = new JButton("Log in");
+            btnLogin.setBorder(new RoundedBorder(7));  // Adjust the radius as needed
             btnLogin.addActionListener(e -> {
                 String u = txtUsername.getText();
                 String p = Integer.toString(txtPassword.getText().hashCode());
@@ -76,8 +103,7 @@ public class Login extends JFrame{
 
             // Cancel button
             btnCreate = new JButton("Create a new account");
-            //btnCancel.addActionListener(e -> System.exit(0));
-            //btnCreate.addActionListener(e -> frame.openScreen("main"));
+            btnCreate.setBorder(new RoundedBorder(5));
             btnCreate.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {

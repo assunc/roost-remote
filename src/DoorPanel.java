@@ -13,22 +13,23 @@ public class DoorPanel extends JPanel {
     private TimePicker timeOpen, timeClose;
     private JButton btnSetOpenTime, btnSetCloseTime;
     private JToggleButton btnToggleDoor;
-    private JLabel lblToggleDoor;
-
+    private JPanel openingTimePanel, closingTimePanel;
+    private JLabel lblOpeningTime, lblSun, lblClosingTime, lblMoon;
     private ImageIcon sun, moon, back, lock, unlock;
 
     public DoorPanel(MainScreen frame) {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
+        //load images
         try {
             sun = new ImageIcon(ImageIO.read(new File("images/rising-sun.png"))
                     .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
             moon = new ImageIcon(ImageIO.read(new File("images/moon2.png"))
                     .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
-            lock =  new ImageIcon(ImageIO.read(new File("images/padlock.png"))
+            lock = new ImageIcon(ImageIO.read(new File("images/padlock.png"))
                     .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
-            unlock =  new ImageIcon(ImageIO.read(new File("images/padlock-unlock.png"))
+            unlock = new ImageIcon(ImageIO.read(new File("images/padlock-unlock.png"))
                     .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
             back = new ImageIcon(ImageIO.read(new File("images/back-arrow.png"))
                     .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
@@ -37,10 +38,11 @@ public class DoorPanel extends JPanel {
         }
 
         // Panel for Opening Time
-        JPanel openingTimePanel = new JPanel();
+
+        openingTimePanel = new JPanel();
         openingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 20));
 
-        JLabel lblOpeningTime = new JLabel("Opening Time:");
+        lblOpeningTime = new JLabel("Opening Time:");
 
         timeOpen = new TimePicker();
         timeOpen.setSize(200, 50);
@@ -51,7 +53,7 @@ public class DoorPanel extends JPanel {
         btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+
                 timeOpen.getSelectedItem()+"/"+frame.getCoopId()));
 
-        JLabel lblSun = new JLabel(sun);
+        lblSun = new JLabel(sun);
 
         openingTimePanel.add(lblOpeningTime);
         openingTimePanel.add(timeOpen);
@@ -59,10 +61,10 @@ public class DoorPanel extends JPanel {
         openingTimePanel.add(lblSun);
 
         // Panel for Closing Time
-        JPanel closingTimePanel = new JPanel();
+        closingTimePanel = new JPanel();
         closingTimePanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10 , 30));
 
-        JLabel lblClosingTime = new JLabel("Closing Time:");
+        lblClosingTime = new JLabel("Closing Time:");
 
         timeClose = new TimePicker();
         timeClose.setSize(200, 50);
@@ -73,26 +75,18 @@ public class DoorPanel extends JPanel {
         btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+
                 timeClose.getSelectedItem()+"/"+frame.getCoopId()));
 
-        JLabel lblMoon = new JLabel(moon);
+        lblMoon = new JLabel(moon);
 
         closingTimePanel.add(lblClosingTime);
         closingTimePanel.add(timeClose);
         closingTimePanel.add(btnSetCloseTime);
         closingTimePanel.add(lblMoon);
 
-        // Toggle button for manual control
-       // boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
-       //         frame.getCoopId())).getJSONObject(0).getInt("doorIsOpen")==
-        int doorIsOpenString = new JSONArray(DB.makeGETRequest("getDoorIsOpen/" + frame.getCoopId()))
-                .getJSONObject(0).getInt("doorIsOpen");
-        //System.out.println("The value of doorIsOpen is:" + doorIsOpenString);
-
-        boolean doorIsOpen = doorIsOpenString == 1;
+        // Toggle button for manual door control
+        boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/" + frame.getCoopId()))
+                .getJSONObject(0).getInt("doorIsOpen") == 1;
         btnToggleDoor = new JToggleButton();
-        if (doorIsOpen)
-            btnToggleDoor.setIcon(lock);
-        else
-            btnToggleDoor.setIcon(unlock);
+        btnToggleDoor.setIcon(doorIsOpen ? lock : unlock);
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {
                 btnToggleDoor.setIcon(unlock);
@@ -109,16 +103,16 @@ public class DoorPanel extends JPanel {
         btnBack.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnBack.addActionListener(e -> frame.openScreen("main"));
 
+        //add everything to panel
         add(openingTimePanel);
         add(closingTimePanel);
-        add(btnToggleDoor); // Moved the toggle button here
+        add(btnToggleDoor);
         add(Box.createVerticalStrut(10)); // Added a vertical strut for spacing
         add(btnBack);
 
+        // show a message if its time to close but some chickens are still out
         LocalTime currentTime = LocalTime.now();
-        int currentHour = currentTime.getHour();
-        int currentMinute = currentTime.getMinute();
-        String nowTime = currentHour + ":" + currentMinute;
+        String nowTime = currentTime.getHour() + ":" + currentTime.getMinute();
         String closingTime = (new JSONArray(DB.makeGETRequest("getCloseTime/"+
                 frame.getCoopId())).getJSONObject(0).getString("closeTime"));
         String totalChickens = String.valueOf(new JSONArray(DB.makeGETRequest("getTotalChicken/" + frame.getCoopId()))
@@ -127,8 +121,6 @@ public class DoorPanel extends JPanel {
                 .getJSONObject(0).getInt("presentChicken"));
         if (Integer.parseInt(currentChicken) < Integer.parseInt(totalChickens) && compareTimes(nowTime, closingTime))
             displayErrorMessage();
-        System.out.println(closingTime);
-        System.out.println(nowTime);
     }
     public boolean compareTimes (String t1, String t2)
     {
@@ -172,25 +164,3 @@ public class DoorPanel extends JPanel {
         errorFrame.setVisible(true);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//easteregg
-//kiss you all

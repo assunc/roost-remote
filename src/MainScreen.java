@@ -5,13 +5,12 @@ import java.awt.*;
 import java.io.File;
 
 public class MainScreen extends JFrame{
-    private JButton btnSettings, btnProfile;
     private JPanel headerPanel, mainPanel, feederPanel, doorPanel, mainScreen;
     private static int SCREEN_WIDTH = 380;
     private static int SCREEN_HEIGHT = 680;
     private CardLayout card;
     private int coopId;
-    //public int coopId;
+    private ImageIcon imageLogo;
 
     public MainScreen(String coopIdTemp) {
         //generate Jframe
@@ -23,39 +22,41 @@ public class MainScreen extends JFrame{
         setLayout(new BorderLayout());
         setResizable(false);
 
+        // header panel with the logo
 
         headerPanel = new JPanel(new BorderLayout());
         headerPanel.setPreferredSize(new Dimension(100, 110));
 //        headerPanel.setBackground(new Color(0x00FF37, false));
 
         try {
-            ImageIcon imageLogo = new ImageIcon(ImageIO.read(new File("images/logo.png"))
+            imageLogo = new ImageIcon(ImageIO.read(new File("images/logo.png"))
                     .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
-            JLabel lblLogo = new JLabel(imageLogo);
-            headerPanel.add(lblLogo, BorderLayout.SOUTH);
         } catch (Exception e) {
             System.err.println("Error loading image: " + e.getMessage());
         }
+        JLabel lblLogo = new JLabel(imageLogo);
+        headerPanel.add(lblLogo, BorderLayout.SOUTH);
+
+        // main panel that changes between screens
 
         mainScreen = new JPanel();
-        mainScreen.setPreferredSize(new Dimension(100, 100));
-        card = new CardLayout();
+        card = new CardLayout(); //layout to switch between screens
         mainScreen.setLayout(card);
-        mainScreen.setPreferredSize(new Dimension(100, 100));
 
+        //panel with main screen
         mainPanel = new MainPanel(this);
-        mainPanel.setPreferredSize(new Dimension(100, 100));
 
-
+        //panel with feeder screen
         feederPanel = new FeederPanel(this);
-        feederPanel.setPreferredSize(new Dimension(100, 100));
 
+        //panel with door screen
         doorPanel = new DoorPanel(this);
 
+        //add all cards to main panel
         mainScreen.add(feederPanel, "feeder");
         mainScreen.add(doorPanel, "door");
         mainScreen.add(mainPanel, "main");
-        card.show(mainScreen, "main");
+        card.show(mainScreen, "main"); //initialize in main screen
 
         //add the Jpanels to the Jframe
         add(headerPanel, BorderLayout.NORTH);
@@ -63,6 +64,7 @@ public class MainScreen extends JFrame{
         setVisible(true);
     }
 
+    //switches to a screen
     public void openScreen(String screen) {
         card.show(mainScreen, screen);
     }
@@ -71,4 +73,3 @@ public class MainScreen extends JFrame{
         return coopId;
     }
 }
-//easteregg

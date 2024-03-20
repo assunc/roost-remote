@@ -26,7 +26,7 @@ public class FeederPanel extends JPanel {
         mainPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 50, 20));
         mainPanel.setPreferredSize(new Dimension(100, 500));
 
-        new JSONArray(DB.makeGETRequest("getFeedingTimes/"+parentFrame.getCoopId()+"/"))
+        DB.makeGETRequest("getFeedingTimes/"+parentFrame.getCoopId()+"/")
                 .forEach(time -> addFeedingTime(((JSONObject) time).getString("time"),
                         ((JSONObject) time).getInt("weight")));
         revalidate();
@@ -123,13 +123,13 @@ public class FeederPanel extends JPanel {
         totalFoodField = new JTextField();
         totalFoodField.setSize(100, 50);
         totalFoodField.setEditable(false);
-        float food = new JSONArray(DB.makeGETRequest("getFood/"+
-                frame.getCoopId())).getJSONObject(0).getFloat("food");
+        float food = DB.makeGETRequest("getFood/"+frame.getCoopId())
+                .getJSONObject(0).getFloat("food");
         totalFoodField.setText(""+food);
         // Check every minute
         Timer timer = new Timer(6000, e -> {
-            float food1 = new JSONArray(DB.makeGETRequest("getFood/"+
-                    frame.getCoopId())).getJSONObject(0).getFloat("food");
+            float food1 = DB.makeGETRequest("getFood/"+frame.getCoopId())
+                    .getJSONObject(0).getFloat("food");
             totalFoodField.setText("" + food1);
             totalFoodField.revalidate();
             totalFoodField.repaint();

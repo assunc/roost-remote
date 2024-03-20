@@ -1,10 +1,6 @@
-import org.json.JSONArray;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 
 public class MainPanel extends JPanel {
@@ -29,7 +25,8 @@ public class MainPanel extends JPanel {
 
         //chickens menu
 
-        totalChickens = Integer.toString(new JSONArray(DB.makeGETRequest("getTotalChicken/" + coopId)).getJSONObject(0).getInt("totalChicken"));
+        totalChickens = Integer.toString(DB.makeGETRequest("getTotalChicken/" + coopId)
+                .getJSONObject(0).getInt("totalChicken"));
 
         totalChickensLabel = new JLabel("Total of chickens inside the coop: ");
         totalChickensTextField = new JTextField(5);
@@ -70,11 +67,13 @@ public class MainPanel extends JPanel {
         currentChickensLabel = new JLabel("Current chickens inside the coop: ");
         currentChickensTextField = new JTextField(5);
         currentChickensTextField.setEditable(false);
-        String currentChicken = String.valueOf(new JSONArray(DB.makeGETRequest("getPresentChickens/" + coopId)).getJSONObject(0).getInt("presentChicken"));
+        String currentChicken = String.valueOf(DB.makeGETRequest("getPresentChickens/" + coopId)
+                .getJSONObject(0).getInt("presentChicken"));
         currentChickensTextField.setText(currentChicken); // Set value from database
         // Check every 5 seconds
         Timer timer = new Timer(5000, e -> {
-            String currentChicken1 = String.valueOf(new JSONArray(DB.makeGETRequest("getPresentChickens/" + coopId)).getJSONObject(0).getInt("presentChicken"));
+            String currentChicken1 = String.valueOf(DB.makeGETRequest("getPresentChickens/" + coopId)
+                    .getJSONObject(0).getInt("presentChicken"));
             currentChickensTextField.setText(currentChicken1);
             revalidate();
         });

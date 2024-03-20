@@ -1,9 +1,7 @@
-import org.json.JSONArray;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 import java.io.File;
 import java.time.LocalTime;
 
@@ -46,8 +44,8 @@ public class DoorPanel extends JPanel {
 
         timeOpen = new TimePicker();
         timeOpen.setSize(200, 50);
-        timeOpen.setSelectedItem(new JSONArray(DB.makeGETRequest("getOpenTime/"+
-                frame.getCoopId())).getJSONObject(0).getString("openTime"));
+        timeOpen.setSelectedItem(DB.makeGETRequest("getOpenTime/"+
+                frame.getCoopId()).getJSONObject(0).getString("openTime"));
 
         btnSetOpenTime = new JButton("Save Changes");
         btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+
@@ -68,8 +66,8 @@ public class DoorPanel extends JPanel {
 
         timeClose = new TimePicker();
         timeClose.setSize(200, 50);
-        timeClose.setSelectedItem(new JSONArray(DB.makeGETRequest("getCloseTime/"+
-                frame.getCoopId())).getJSONObject(0).getString("closeTime"));
+        timeClose.setSelectedItem(DB.makeGETRequest("getCloseTime/"+
+                frame.getCoopId()).getJSONObject(0).getString("closeTime"));
 
         btnSetCloseTime = new JButton("Save Changes");
         btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+
@@ -83,7 +81,7 @@ public class DoorPanel extends JPanel {
         closingTimePanel.add(lblMoon);
 
         // Toggle button for manual door control
-        boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/" + frame.getCoopId()))
+        boolean doorIsOpen = DB.makeGETRequest("getDoorIsOpen/" + frame.getCoopId())
                 .getJSONObject(0).getInt("doorIsOpen") == 1;
         btnToggleDoor = new JToggleButton();
         btnToggleDoor.setIcon(doorIsOpen ? lock : unlock);
@@ -113,11 +111,11 @@ public class DoorPanel extends JPanel {
         // show a message if its time to close but some chickens are still out
         LocalTime currentTime = LocalTime.now();
         String nowTime = currentTime.getHour() + ":" + currentTime.getMinute();
-        String closingTime = (new JSONArray(DB.makeGETRequest("getCloseTime/"+
-                frame.getCoopId())).getJSONObject(0).getString("closeTime"));
-        String totalChickens = String.valueOf(new JSONArray(DB.makeGETRequest("getTotalChicken/" + frame.getCoopId()))
+        String closingTime = (DB.makeGETRequest("getCloseTime/"+
+                frame.getCoopId()).getJSONObject(0).getString("closeTime"));
+        String totalChickens = String.valueOf(DB.makeGETRequest("getTotalChicken/" + frame.getCoopId())
                 .getJSONObject(0).getInt("totalChicken"));
-        String currentChicken = String.valueOf(new JSONArray(DB.makeGETRequest("getPresentChickens/" + frame.getCoopId()))
+        String currentChicken = String.valueOf(DB.makeGETRequest("getPresentChickens/" + frame.getCoopId())
                 .getJSONObject(0).getInt("presentChicken"));
         if (Integer.parseInt(currentChicken) < Integer.parseInt(totalChickens) && compareTimes(nowTime, closingTime))
             displayErrorMessage();

@@ -110,5 +110,4 @@ public class createAccount extends JFrame {
         add(panel);
         setVisible(true);
     }
-
 }

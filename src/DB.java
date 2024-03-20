@@ -25,5 +25,8 @@ public class DB {
         }
         return "";
     }
+
+    public static Object getValue(String JSON, String value) {
+        return new JSONArray(JSON).getJSONObject(0).get(value);
+    }
 }
-//easteregg

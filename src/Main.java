@@ -1,6 +1,5 @@
 public class Main {
     public static void main(String[] args) {
-        new Login();
+        new MainScreen("1");
     }
 }
-//easteregg

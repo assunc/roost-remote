@@ -1,8 +1,6 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Objects;
 
@@ -149,9 +147,14 @@ public class FeederPanel extends JPanel {
         totalFoodPanel.add(totalFoodField);
         totalFoodPanel.add(gramLbl);
 
-        add(mainPanel, BorderLayout.NORTH);
-        add(totalFoodPanel, BorderLayout.CENTER);
-        add(buttonsPanel, BorderLayout.SOUTH);
+        // bottomPanel
+
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(totalFoodPanel, BorderLayout.CENTER);
+        bottomPanel.add(buttonsPanel, BorderLayout.SOUTH);
+
+        add(mainPanel, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     public boolean addFeedingTime(String time, int weight) {

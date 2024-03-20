@@ -23,8 +23,11 @@ public class MainScreen extends JFrame{
         setLayout(new BorderLayout());
         setResizable(false);
 
+
         headerPanel = new JPanel(new BorderLayout());
         headerPanel.setPreferredSize(new Dimension(100, 110));
+//        headerPanel.setBackground(new Color(0x00FF37, false));
+
         try {
             ImageIcon imageLogo = new ImageIcon(ImageIO.read(new File("images/logo.png"))
                     .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
@@ -42,6 +45,7 @@ public class MainScreen extends JFrame{
 
         mainPanel = new MainPanel(this);
         mainPanel.setPreferredSize(new Dimension(100, 100));
+
 
         feederPanel = new FeederPanel(this);
         feederPanel.setPreferredSize(new Dimension(100, 100));

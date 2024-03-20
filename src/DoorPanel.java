@@ -13,12 +13,28 @@ public class DoorPanel extends JPanel {
     private TimePicker timeOpen, timeClose;
     private JButton btnSetOpenTime, btnSetCloseTime;
     private JToggleButton btnToggleDoor;
+    private JLabel lblToggleDoor;
 
     private ImageIcon sun, moon, back, lock, unlock;
 
     public DoorPanel(MainScreen frame) {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+
+        try {
+            sun = new ImageIcon(ImageIO.read(new File("images/rising-sun.png"))
+                    .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
+            moon = new ImageIcon(ImageIO.read(new File("images/moon2.png"))
+                    .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
+            lock =  new ImageIcon(ImageIO.read(new File("images/padlock.png"))
+                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
+            unlock =  new ImageIcon(ImageIO.read(new File("images/padlock-unlock.png"))
+                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
+            back = new ImageIcon(ImageIO.read(new File("images/back-arrow.png"))
+                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
+        } catch (Exception e) {
+            System.err.println("Error loading image sun: " + e.getMessage());
+        }
 
         // Panel for Opening Time
         JPanel openingTimePanel = new JPanel();
@@ -35,17 +51,6 @@ public class DoorPanel extends JPanel {
         btnSetOpenTime.addActionListener(e -> DB.makeGETRequest("setOpenTime/"+
                 timeOpen.getSelectedItem()+"/"+frame.getCoopId()));
 
-
-        try {
-            sun = new ImageIcon(ImageIO.read(new File("images/rising-sun.png"))
-                    .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
-            lock =  new ImageIcon(ImageIO.read(new File("images/padlock.png"))
-                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
-            unlock =  new ImageIcon(ImageIO.read(new File("images/padlock-unlock.png"))
-                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
-        } catch (Exception e) {
-            System.err.println("Error loading image sun: " + e.getMessage());
-        }
         JLabel lblSun = new JLabel(sun);
 
         openingTimePanel.add(lblOpeningTime);
@@ -68,12 +73,6 @@ public class DoorPanel extends JPanel {
         btnSetCloseTime.addActionListener(e -> DB.makeGETRequest("setCloseTime/"+
                 timeClose.getSelectedItem()+"/"+frame.getCoopId()));
 
-        try {
-            moon = new ImageIcon(ImageIO.read(new File("images/moon2.png"))
-                    .getScaledInstance(100, 100, Image.SCALE_AREA_AVERAGING));
-        } catch (Exception e) {
-            System.err.println("Error loading image moon: " + e.getMessage());
-        }
         JLabel lblMoon = new JLabel(moon);
 
         closingTimePanel.add(lblClosingTime);
@@ -84,8 +83,8 @@ public class DoorPanel extends JPanel {
         // Toggle button for manual control
        // boolean doorIsOpen = new JSONArray(DB.makeGETRequest("getDoorIsOpen/"+
        //         frame.getCoopId())).getJSONObject(0).getInt("doorIsOpen")==
-        DBTest db = new DBTest();
-        int doorIsOpenString = db.parseJSONgetDoor(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getDoorIsOpen/" + frame.getCoopId()));
+        int doorIsOpenString = new JSONArray(DB.makeGETRequest("getDoorIsOpen/" + frame.getCoopId()))
+                .getJSONObject(0).getInt("doorIsOpen");
         //System.out.println("The value of doorIsOpen is:" + doorIsOpenString);
 
         boolean doorIsOpen = doorIsOpenString == 1;
@@ -97,21 +96,15 @@ public class DoorPanel extends JPanel {
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {
                 btnToggleDoor.setIcon(unlock);
-                db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/changeStateDoor/" + "0" + "/" + frame.getCoopId());
+                DB.makeGETRequest("changeStateDoor/" + "0" + "/" + frame.getCoopId());
             } else {
                 btnToggleDoor.setIcon(lock);
-                db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/changeStateDoor/" + "1" + "/" + frame.getCoopId());
+                DB.makeGETRequest("changeStateDoor/" + "1" + "/" + frame.getCoopId());
             }
         });
         btnToggleDoor.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Back button
-        try {
-            back = new ImageIcon(ImageIO.read(new File("images/back-arrow.png"))
-                    .getScaledInstance(25, 25, Image.SCALE_AREA_AVERAGING));
-        } catch (Exception e) {
-            System.err.println("Error loading image back: " + e.getMessage());
-        }
         btnBack = new JButton(back);
         btnBack.setAlignmentX(Component.CENTER_ALIGNMENT);
         btnBack.addActionListener(e -> frame.openScreen("main"));
@@ -128,8 +121,10 @@ public class DoorPanel extends JPanel {
         String nowTime = currentHour + ":" + currentMinute;
         String closingTime = (new JSONArray(DB.makeGETRequest("getCloseTime/"+
                 frame.getCoopId())).getJSONObject(0).getString("closeTime"));
-        String totalChickens = db.parseJSONgetTotalChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getTotalChicken/" + frame.getCoopId()));
-        String currentChicken = db.parseJSONgetCurrentChickens(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getPresentChickens/" + frame.getCoopId()));
+        String totalChickens = String.valueOf(new JSONArray(DB.makeGETRequest("getTotalChicken/" + frame.getCoopId()))
+                .getJSONObject(0).getInt("totalChicken"));
+        String currentChicken = String.valueOf(new JSONArray(DB.makeGETRequest("getPresentChickens/" + frame.getCoopId()))
+                .getJSONObject(0).getInt("presentChicken"));
         if (Integer.parseInt(currentChicken) < Integer.parseInt(totalChickens) && compareTimes(nowTime, closingTime))
             displayErrorMessage();
         System.out.println(closingTime);
@@ -141,9 +136,8 @@ public class DoorPanel extends JPanel {
         String[] T2 = t2.split(":");
         if (Integer.parseInt(T1[0]) > Integer.parseInt(T2[0]))
             return true;
-        else
-            if (Integer.parseInt(T1[0]) == Integer.parseInt(T2[0]))
-                return Integer.parseInt(T1[1]) >= Integer.parseInt(T2[1]);
+        else if (Integer.parseInt(T1[0]) == Integer.parseInt(T2[0]))
+            return Integer.parseInt(T1[1]) >= Integer.parseInt(T2[1]);
         return false;
     }
 

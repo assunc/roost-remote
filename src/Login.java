@@ -1,3 +1,5 @@
+import org.json.JSONArray;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -25,23 +27,15 @@ public class Login extends JFrame{
              class RoundedBorder implements Border {
 
                 private int radius;
-
-
                 RoundedBorder(int radius) {
                     this.radius = radius;
                 }
-
-
                 public Insets getBorderInsets(Component c) {
                     return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
                 }
-
-
                 public boolean isBorderOpaque() {
                     return true;
                 }
-
-
                 public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
                     g.drawRoundRect(x, y, width-1, height-1, radius, radius);
                 }
@@ -79,18 +73,11 @@ public class Login extends JFrame{
                 String u = txtUsername.getText();
                 String p = Integer.toString(txtPassword.getText().hashCode());
 
-               // System.out.println(u);
-                DBTest db = new DBTest();
-
-
-                if (p.equals(db.parseJSONLogin(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/Login/" + u)))) {
+                if (p.equals(new JSONArray(DB.makeGETRequest("Login/" + u)).getJSONObject(0).getString("password"))) {
                     JOptionPane.showMessageDialog(Login.this, "Login successful!");
-                    String iduser = "";
-                    String iduserjson = db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getID/" + u);
-                    iduser =  db.parseJSONUserID(iduserjson);
-                    String idcoop = "";
-                    idcoop = db.parseJSONCoopID(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getCoopID/" + iduser));
-                    MainScreen mainScreen = new MainScreen(idcoop);
+                    String idUser = String.valueOf(new JSONArray(DB.makeGETRequest("getID/" + u)).getJSONObject(0).getInt("idUser"));
+                    String idCoop = String.valueOf(new JSONArray(DB.makeGETRequest("getCoopID/" + idUser)).getJSONObject(0).getInt("idCoop"));
+                    MainScreen mainScreen = new MainScreen(idCoop);
                     mainScreen.setVisible(true);
                     setVisible(false);
                 } else {
@@ -104,14 +91,11 @@ public class Login extends JFrame{
             // Cancel button
             btnCreate = new JButton("Create a new account");
             btnCreate.setBorder(new RoundedBorder(5));
-            btnCreate.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    // Create an instance of the CreateAccountPanel
-                    createAccount createAccountPanel = new createAccount(Login.this);
-                    createAccountPanel.setVisible(true);
-                    setVisible(false);
-                }
+            btnCreate.addActionListener(e -> {
+                // Create an instance of the CreateAccountPanel
+                createAccount createAccountPanel = new createAccount(Login.this);
+                createAccountPanel.setVisible(true);
+                setVisible(false);
             });
             c.gridx = 1;
             panel.add(btnCreate, c);
@@ -121,4 +105,3 @@ public class Login extends JFrame{
         }
     }
 
-//eastereg

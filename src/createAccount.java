@@ -1,3 +1,5 @@
+import org.json.JSONArray;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -67,40 +69,28 @@ public class createAccount extends JFrame {
 
         // Create account button
         btnCreateAccount = new JButton("Create Account");
-        btnCreateAccount.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //String username = txtUsername.getText();
-                String password = new String(txtPassword.getText());
-                String confirmPassword = new String(txtConfirmPassword.getText());
-                if (password.length() > 0) {
-                    if (password.equals(confirmPassword)) {
+        btnCreateAccount.addActionListener(e -> {
+            //String username = txtUsername.getText();
+            String password = txtPassword.getText();
+            String confirmPassword = txtConfirmPassword.getText();
+            if (password.length() < 5) {
+                if (password.equals(confirmPassword)) {
 
-                        String username = txtUsername.getText();
-                        String pswrd = Integer.toString(txtPassword.getText().hashCode());
-                        String iduser = "";
-                        String idcoop = "";
+                    String username = txtUsername.getText();
+                    String passwordHash = Integer.toString(txtPassword.getText().hashCode());
 
-                        DBTest db = new DBTest();
-                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateUser/" + username + "/" + pswrd);
-                        String iduserjson = db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getID/" + username);
+                    DB.makeGETRequest("CreateUser/" + username + "/" + passwordHash);
+                    String idUser = new JSONArray(DB.makeGETRequest("getID/" + username)).getJSONObject(0).getString("idUser");
 
-                        iduser =  db.parseJSONUserID(iduserjson);
-
-                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateCoop/" + iduser + "/" + "0" + "/" + "0" + "/" + "0" + "/" + "6:00" + "/" + "19:00" + "/" + "1");
-                        idcoop = db.parseJSONCoopID(db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/getCoopID/" + iduser));
-                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateFeedingTime/" + idcoop + "/" + "07:00" + "/" + "100");
-                        db.makeGETRequest("https://studev.groept.be/api/a23ib2d05/CreateFeedingTime/" + idcoop + "/" + "18:00" + "/" + "150");
-                        JOptionPane.showMessageDialog(createAccount.this, "Account successfully created!");
-                        setVisible(false);
-                        loginScreen.setVisible(true); // Show the login screen again
-                    } else {
-                        JOptionPane.showMessageDialog(createAccount.this, "Passwords don't match!");
-                    }
+                    DB.makeGETRequest("CreateCoop/" + idUser + "/0/0/0/6:00/19:00/1");
+                    JOptionPane.showMessageDialog(createAccount.this, "Account successfully created!");
+                    setVisible(false);
+                    loginScreen.setVisible(true); // Show the login screen again
+                } else {
+                    JOptionPane.showMessageDialog(createAccount.this, "Passwords don't match!");
                 }
-                else {
-                    JOptionPane.showMessageDialog(createAccount.this, "Password must be at least 5 characters long");
-                }
+            } else {
+                JOptionPane.showMessageDialog(createAccount.this, "Password must be at least 5 characters long");
             }
         });
         c.gridy = 3;
@@ -110,12 +100,9 @@ public class createAccount extends JFrame {
 
         // Back to login button
         btnBackToLogIn = new JButton("Back to Log in");
-        btnBackToLogIn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setVisible(false);
-                loginScreen.setVisible(true); // Show the login screen again
-            }
+        btnBackToLogIn.addActionListener(e -> {
+            setVisible(false);
+            loginScreen.setVisible(true); // Show the login screen again
         });
         c.gridx = 0;
         panel.add(btnBackToLogIn, c);
@@ -125,4 +112,3 @@ public class createAccount extends JFrame {
     }
 
 }
-//eastereg

@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.sql.Time;
 
 public class TimePicker extends JComboBox<String> {
     String[] times;

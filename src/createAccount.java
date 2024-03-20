@@ -2,8 +2,6 @@ import org.json.JSONArray;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.concurrent.TimeUnit;
 
 
 public class createAccount extends JFrame {
@@ -14,13 +12,13 @@ public class createAccount extends JFrame {
     private JButton btnCreateAccount, btnBackToLogIn;
     private Login loginScreen;
 
-    public String getUsername()
-    {
-        return txtUsername.getText();
-    }
-    public String getPassword(){
-        return txtPassword.getText();
-    }
+//    public String getUsername()
+//    {
+//        return txtUsername.getText();
+//    }
+//    public String getPassword(){
+//        return txtPassword.getText();
+//    }
     public createAccount(Login logIn) {
         super("Create Account");
         this.loginScreen = logIn;

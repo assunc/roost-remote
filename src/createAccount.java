@@ -48,7 +48,7 @@ public class createAccount extends JFrame {
 
         // Password field
         txtPassword = new JPasswordField(20);
-        gbc.gridy = 1;
+        gbc.gridx = 1;
         panel.add(txtPassword, gbc);
 
         // Confirm password label

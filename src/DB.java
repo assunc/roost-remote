@@ -20,7 +20,11 @@ public class DB {
                 sb.append(line).append('\n');
             }
             conn.disconnect();
-            return new JSONArray(sb.toString());
+            if (!sb.toString().isEmpty()) {
+                return new JSONArray(sb.toString());
+            } else {
+                return new JSONArray("[]");
+            }
         } catch (IOException e){
             e.printStackTrace();
         }

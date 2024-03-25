@@ -1,10 +1,9 @@
 import org.json.JSONArray;
-
 import javax.swing.*;
 import java.awt.*;
 
 
-public class createAccount extends JFrame {
+public class CreateAccount extends JFrame {
 
     private JLabel lblUsername, lblPassword, lblConfirmPassword;
     private JTextField txtUsername;
@@ -19,7 +18,7 @@ public class createAccount extends JFrame {
 //    public String getPassword(){
 //        return txtPassword.getText();
 //    }
-    public createAccount(Login logIn) {
+    public CreateAccount(Login logIn) {
         super("Create Account");
         this.loginScreen = logIn;
         setSize(400, 250);
@@ -68,23 +67,23 @@ public class createAccount extends JFrame {
         btnCreateAccount.addActionListener(e -> {
             String password = txtPassword.getText();
             String confirmPassword = txtConfirmPassword.getText();
-            if (password.length() < 5) {
+            if (password.length() > 5) {
                 if (password.equals(confirmPassword)) {
 
                     String username = txtUsername.getText();
 
                     DB.makeGETRequest("CreateUser/" + username + "/" + txtPassword.getText().hashCode());
-                    String idUser = new JSONArray(DB.makeGETRequest("getID/" + username)).getJSONObject(0).getString("idUser");
+                    int idUser = new JSONArray(DB.makeGETRequest("getID/" + username)).getJSONObject(0).getInt("idUser");
 
                     DB.makeGETRequest("CreateCoop/" + idUser + "/0/0/0/6:00/19:00/1");
-                    JOptionPane.showMessageDialog(createAccount.this, "Account successfully created!");
+                    JOptionPane.showMessageDialog(CreateAccount.this, "Account successfully created!");
                     setVisible(false);
                     loginScreen.setVisible(true); // Show the login screen again
                 } else {
-                    JOptionPane.showMessageDialog(createAccount.this, "Passwords don't match!");
+                    JOptionPane.showMessageDialog(CreateAccount.this, "Passwords don't match!");
                 }
             } else {
-                JOptionPane.showMessageDialog(createAccount.this, "Password must be at least 5 characters long");
+                JOptionPane.showMessageDialog(CreateAccount.this, "Password must be at least 5 characters long");
             }
         });
         gbc.gridy = 3;

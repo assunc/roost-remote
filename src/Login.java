@@ -87,7 +87,7 @@ public class Login extends JFrame{
         btnCreate.setBorder(new RoundedBorder(5));
         btnCreate.addActionListener(e -> {
             // Create an instance of the CreateAccountPanel
-            createAccount createAccountPanel = new createAccount(Login.this);
+            CreateAccount createAccountPanel = new CreateAccount(Login.this);
             createAccountPanel.setVisible(true);
             setVisible(false);
         });

@@ -1,4 +1,6 @@
 import org.json.JSONArray;
+import org.json.JSONException;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -72,13 +74,22 @@ public class CreateAccount extends JFrame {
 
                     String username = txtUsername.getText();
 
-                    DB.makeGETRequest("CreateUser/" + username + "/" + txtPassword.getText().hashCode());
-                    int idUser = new JSONArray(DB.makeGETRequest("getID/" + username)).getJSONObject(0).getInt("idUser");
+                    try {
+                        // Attempt to create the user
+                        DB.makeGETRequest("CreateUser/" + username + "/" + txtPassword.getText().hashCode());
+                        // Retrieve the user ID
+                        int idUser = new JSONArray(DB.makeGETRequest("getID/" + username)).getJSONObject(0).getInt("idUser");
 
-                    DB.makeGETRequest("CreateCoop/" + idUser + "/0/0/0/6:00/19:00/1");
-                    JOptionPane.showMessageDialog(CreateAccount.this, "Account successfully created!");
-                    setVisible(false);
-                    loginScreen.setVisible(true); // Show the login screen again
+                        // Create coop for the user
+                        DB.makeGETRequest("CreateCoop/" + idUser + "/0/0/0/6:00/19:00/1");
+                        JOptionPane.showMessageDialog(CreateAccount.this, "Account successfully created!");
+                        setVisible(false);
+                        loginScreen.setVisible(true); // Show the login screen again
+                    } catch (JSONException ex) {
+                        // Username already in use
+                        JOptionPane.showMessageDialog(CreateAccount.this, "This username is already being used. Please try another username.");
+                    }
+
                 } else {
                     JOptionPane.showMessageDialog(CreateAccount.this, "Passwords don't match!");
                 }
@@ -86,6 +97,7 @@ public class CreateAccount extends JFrame {
                 JOptionPane.showMessageDialog(CreateAccount.this, "Password must be at least 5 characters long");
             }
         });
+
         gbc.gridy = 3;
         gbc.weightx = 1.0; // Horizontal padding
         gbc.insets = new Insets(10, 10, 10, 10); // Add spacing around the buttons

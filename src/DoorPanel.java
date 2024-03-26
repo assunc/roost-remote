@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.time.LocalTime;
+import java.util.concurrent.TimeUnit;
 
 public class DoorPanel extends JPanel {
 
@@ -85,6 +86,7 @@ public class DoorPanel extends JPanel {
                 .getJSONObject(0).getInt("doorIsOpen") == 1;
         btnToggleDoor = new JToggleButton();
         btnToggleDoor.setIcon(doorIsOpen ? lock : unlock);
+        btnToggleDoor.setSelected(!doorIsOpen);
         btnToggleDoor.addActionListener(e -> {
             if (((AbstractButton)e.getSource()).getModel().isSelected()) {
                 btnToggleDoor.setIcon(unlock);
